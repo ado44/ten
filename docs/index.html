@@ -113,6 +113,10 @@ body { font-family: system-ui, sans-serif; background: #0f0f0f; color: #e8e8e8; 
 .btn-complete:hover { background: #1a2a1a; }
 
 .audio-missing { font-size: 11px; color: #333; font-style: italic; margin-top: 4px; }
+
+/* BIYI NOTE */
+.biyi-note { font-size: 12px; color: #555; background: #111; border: 1px solid #1e2e1e; border-radius: 8px; padding: 10px 14px; margin-bottom: 16px; line-height: 1.6; }
+.biyi-note span { color: #4a8a4a; font-weight: 600; }
 </style>
 </head>
 <body>
@@ -133,7 +137,6 @@ const DAYS = [
       { p: "Ghalat", t: "Faux / Erreur", audio: "j1_ghalat" },
       { p: "Haga", t: "Quelque chose", audio: "j1_haga" },
       { p: "Koll", t: "Tout / Chaque", audio: "j1_koll" },
-      { p: "Biyishoof", t: "Voir", audio: "j1_biyishoof" },
     ],
     phrases: [
       { p: "Aywa, da sa7.", t: "Oui, c'est vrai.", audio: "j1_p1" },
@@ -727,6 +730,14 @@ function renderWords(el) {
   label.className = 'section-label';
   label.textContent = `Jour ${d.id} — ${d.title}`;
   el.appendChild(label);
+
+  const hasBiyi = d.words.some(w => w.p.toLowerCase().startsWith('biyi') || w.p.toLowerCase().startsWith('bit'));
+  if (hasBiyi) {
+    const note = document.createElement('div');
+    note.className = 'biyi-note';
+    note.innerHTML = `<span>biyi-</span> = préfixe du présent continu, 3ème personne (il/elle). <span>biyishoof</span> = il voit, <span>biyigi</span> = il vient, etc.`;
+    el.appendChild(note);
+  }
 
   const list = document.createElement('div');
   list.className = 'word-list';
