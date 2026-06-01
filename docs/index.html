@@ -1,0 +1,948 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arabe Égyptien — 10 Jours</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: system-ui, sans-serif; background: #0f0f0f; color: #e8e8e8; min-height: 100vh; }
+#app { max-width: 520px; margin: 0 auto; padding: 16px 16px 60px; }
+
+/* HEADER */
+.header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #222; }
+.header h1 { font-size: 17px; font-weight: 700; }
+.header p { font-size: 11px; color: #555; margin-top: 2px; }
+.streak { font-size: 13px; color: #f0a500; }
+
+/* DAY NAV */
+.day-nav { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+.day-btn { width: 38px; height: 38px; border-radius: 50%; border: 1px solid #2a2a2a; background: #1a1a1a; color: #333; font-size: 13px; font-weight: 600; cursor: default; display: flex; align-items: center; justify-content: center; }
+.day-btn.unlocked { border-color: #3a3a3a; color: #888; cursor: pointer; }
+.day-btn.unlocked:hover { border-color: #555; color: #ccc; }
+.day-btn.active { border-color: #4a90d9; color: #4a90d9; background: #0d1f2f; }
+.day-btn.done { border-color: #2d5a2d; color: #4a8a4a; background: #0d1f0d; }
+
+/* PROGRESS */
+.progress-bar { height: 2px; background: #1a1a1a; border-radius: 2px; margin-bottom: 20px; }
+.progress-fill { height: 100%; background: #4a90d9; border-radius: 2px; transition: width 0.4s; }
+
+/* STEP TABS */
+.step-tabs { display: flex; gap: 0; border: 1px solid #222; border-radius: 8px; overflow: hidden; margin-bottom: 20px; }
+.step-tab { flex: 1; padding: 9px 4px; text-align: center; font-size: 12px; color: #444; background: #111; border: none; cursor: default; }
+.step-tab.reachable { color: #666; cursor: pointer; }
+.step-tab.active { background: #0d1f2f; color: #4a90d9; }
+.step-tab.done-tab { color: #4a8a4a; }
+
+/* SECTION TITLE */
+.section-label { font-size: 11px; color: #444; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+
+/* WORD LIST */
+.word-list { display: flex; flex-direction: column; gap: 2px; margin-bottom: 24px; }
+.word-row { display: flex; align-items: center; gap: 12px; padding: 10px 12px; background: #141414; border-radius: 8px; }
+.word-row:hover { background: #1a1a1a; }
+.btn-play { width: 32px; height: 32px; border-radius: 50%; border: 1px solid #2a2a2a; background: #0d1f2f; color: #4a90d9; font-size: 12px; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.btn-play:hover { background: #1a2a3a; border-color: #4a90d9; }
+.btn-play.playing { background: #4a90d9; color: #fff; border-color: #4a90d9; }
+.word-phonetic { font-size: 15px; font-weight: 600; color: #e8e8e8; flex: 1; }
+.word-translation { font-size: 13px; color: #666; }
+
+/* PHRASE LIST */
+.phrase-list { display: flex; flex-direction: column; gap: 2px; margin-bottom: 28px; }
+.phrase-row { display: flex; align-items: flex-start; gap: 12px; padding: 10px 12px; background: #141414; border-radius: 8px; }
+.phrase-row:hover { background: #1a1a1a; }
+.phrase-texts { flex: 1; }
+.phrase-phonetic { font-size: 14px; color: #ccc; margin-bottom: 3px; }
+.phrase-translation { font-size: 12px; color: #555; }
+
+/* NEXT STEP BTN */
+.btn-next-step { width: 100%; padding: 13px; background: #0d1f2f; border: 1px solid #2a4a6a; color: #4a90d9; border-radius: 10px; font-size: 15px; cursor: pointer; margin-top: 8px; }
+.btn-next-step:hover { background: #1a2a3a; }
+
+/* EXERCISE */
+.exercise-wrap { margin-bottom: 20px; }
+.ex-counter { font-size: 11px; color: #444; margin-bottom: 12px; text-align: right; }
+
+/* EXO 1 — RECONNAÎTRE */
+.ex1-audio-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 20px; background: #0d1f2f; border: 1px solid #2a4a6a; border-radius: 12px; color: #4a90d9; font-size: 15px; cursor: pointer; margin-bottom: 20px; }
+.ex1-audio-btn:hover { background: #1a2a3a; }
+.ex1-audio-btn.playing { background: #1a2a3a; border-color: #4a90d9; }
+.choices { display: flex; flex-direction: column; gap: 8px; }
+.choice-btn { padding: 13px 16px; background: #141414; border: 1px solid #2a2a2a; border-radius: 10px; color: #ccc; font-size: 14px; cursor: pointer; text-align: left; }
+.choice-btn:hover { background: #1a1a1a; border-color: #3a3a3a; }
+.choice-btn.correct { background: #0d1f0d; border-color: #2d5a2d; color: #4a8a4a; }
+.choice-btn.wrong { background: #1f0d0d; border-color: #5a2d2d; color: #8a4a4a; }
+.choice-btn:disabled { cursor: default; }
+
+/* EXO 2 — TRADUCTION LIBRE */
+.ex2-prompt { font-size: 16px; color: #ccc; margin-bottom: 6px; text-align: center; padding: 20px; background: #141414; border-radius: 12px; margin-bottom: 16px; }
+.ex2-prompt-label { font-size: 11px; color: #444; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+.ex2-input { width: 100%; background: #111; border: 1px solid #2a2a2a; border-radius: 10px; padding: 13px 14px; color: #e8e8e8; font-size: 16px; outline: none; margin-bottom: 10px; }
+.ex2-input:focus { border-color: #4a90d9; }
+.ex2-input.correct { border-color: #2d5a2d; background: #0d1f0d; }
+.ex2-input.wrong { border-color: #5a2d2d; background: #1f0d0d; }
+.ex2-answer { font-size: 13px; color: #4a8a4a; margin-bottom: 12px; display: none; padding: 8px 12px; background: #0d1f0d; border-radius: 8px; }
+.btn-check { width: 100%; padding: 12px; background: #141414; border: 1px solid #2a2a2a; color: #888; border-radius: 10px; font-size: 14px; cursor: pointer; }
+.btn-check:hover { border-color: #4a90d9; color: #4a90d9; }
+.btn-skip { width: 100%; padding: 10px; background: transparent; border: none; color: #333; font-size: 13px; cursor: pointer; margin-top: 4px; }
+.btn-skip:hover { color: #555; }
+
+/* DIALOGUE */
+.dialogue-box { background: #141414; border: 1px solid #222; border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+.dialogue-tag { font-size: 11px; color: #444; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+.dialogue-line { margin-bottom: 12px; }
+.dialogue-speaker { font-size: 11px; color: #4a90d9; margin-bottom: 3px; }
+.dialogue-text { font-size: 14px; color: #ccc; line-height: 1.6; }
+.btn-dialogue-audio { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: #0d1f2f; border: 1px solid #2a4a6a; color: #4a90d9; border-radius: 8px; font-size: 13px; cursor: pointer; margin: 16px 0 12px; }
+.btn-dialogue-audio:hover { background: #1a2a3a; }
+.btn-dialogue-audio.playing { border-color: #4a90d9; }
+.btn-show-trad { font-size: 12px; color: #444; cursor: pointer; text-decoration: underline; background: none; border: none; }
+.btn-show-trad:hover { color: #666; }
+.trad-block { display: none; margin-top: 12px; padding: 12px; background: #111; border-radius: 8px; }
+.trad-line { font-size: 13px; color: #666; margin-bottom: 6px; line-height: 1.5; }
+.new-words-block { margin-top: 16px; border-top: 1px solid #1a1a1a; padding-top: 12px; }
+.new-words-title { font-size: 11px; color: #444; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.new-word-row { font-size: 13px; color: #777; margin-bottom: 4px; }
+.new-word-row span { color: #f0a500; }
+
+/* COMPLETE */
+.complete-box { text-align: center; padding: 40px 20px; }
+.complete-box h2 { font-size: 22px; margin-bottom: 8px; }
+.complete-box p { font-size: 14px; color: #555; margin-bottom: 24px; }
+.btn-complete { padding: 13px 28px; background: #0d1f0d; border: 1px solid #2d5a2d; color: #4a8a4a; border-radius: 10px; font-size: 15px; cursor: pointer; }
+.btn-complete:hover { background: #1a2a1a; }
+
+.audio-missing { font-size: 11px; color: #333; font-style: italic; margin-top: 4px; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+const DAYS = [
+  {
+    id: 1, title: "Exister, pointer, nier",
+    words: [
+      { p: "Da / Di", t: "C'est (masc./fém.)", audio: "j1_da" },
+      { p: "Dah", t: "Ça / Celui-ci", audio: "j1_dah" },
+      { p: "Fii", t: "Il y a / Dans", audio: "j1_fii" },
+      { p: "Mafeesh", t: "Il n'y a pas", audio: "j1_mafeesh" },
+      { p: "Mesh", t: "Ne... pas", audio: "j1_mesh" },
+      { p: "Aywa", t: "Oui", audio: "j1_aywa" },
+      { p: "La'", t: "Non", audio: "j1_la" },
+      { p: "Ghalat", t: "Faux / Erreur", audio: "j1_ghalat" },
+    ],
+    phrases: [
+      { p: "Aywa, da sa7.", t: "Oui, c'est vrai.", audio: "j1_p1" },
+      { p: "La', da ghalat.", t: "Non, c'est faux.", audio: "j1_p2" },
+      { p: "Fii haga.", t: "Il y a quelque chose.", audio: "j1_p3" },
+      { p: "Mafeesh haga.", t: "Il n'y a rien.", audio: "j1_p4" },
+      { p: "Da mesh sa7.", t: "C'est pas juste.", audio: "j1_p5" },
+    ],
+    exo1: [
+      { audio: "j1_dah", correct: "Ça / Celui-ci", choices: ["Ça / Celui-ci", "Il n'y a pas", "Faux / Erreur"] },
+      { audio: "j1_mafeesh", correct: "Il n'y a pas", choices: ["Oui", "Il n'y a pas", "C'est (masc./fém.)"] },
+      { audio: "j1_aywa", correct: "Oui", choices: ["Non", "Oui", "Ne... pas"] },
+      { audio: "j1_ghalat", correct: "Faux / Erreur", choices: ["Il y a / Dans", "C'est (masc./fém.)", "Faux / Erreur"] },
+    ],
+    exo2: [
+      { fr: "Il y a quelque chose.", answer: "fii haga" },
+      { fr: "Non, c'est faux.", answer: "la' da ghalat" },
+      { fr: "Il n'y a rien.", answer: "mafeesh haga" },
+    ],
+  },
+  {
+    id: 2, title: "Toi, vouloir, avoir",
+    words: [
+      { p: "Enta", t: "Tu / Toi", audio: "j2_enta" },
+      { p: "3ayez", t: "Vouloir / Je veux", audio: "j2_3ayez" },
+      { p: "3andi", t: "J'ai", audio: "j2_3andi" },
+      { p: "-i (suffixe)", t: "Mon / Ma", audio: "j2_i" },
+      { p: "Tab3an", t: "Bien sûr", audio: "j2_tab3an" },
+      { p: "Lazem", t: "Il faut / Falloir", audio: "j2_lazem" },
+      { p: "Yimkin", t: "Peut-être", audio: "j2_yimkin" },
+    ],
+    phrases: [
+      { p: "Tab3an, ana 3ayez.", t: "Bien sûr, je veux.", audio: "j2_p1" },
+      { p: "Enta 3ayez eih?", t: "Tu veux quoi ?", audio: "j2_p2" },
+      { p: "3andi haga.", t: "J'ai quelque chose.", audio: "j2_p3" },
+      { p: "Lazem tigi.", t: "Il faut que tu viennes.", audio: "j2_p4" },
+      { p: "Yimkin bokra.", t: "Peut-être demain.", audio: "j2_p5" },
+    ],
+    exo1: [
+      { audio: "j2_tab3an", correct: "Bien sûr", choices: ["Peut-être", "Bien sûr", "J'ai"] },
+      { audio: "j2_lazem", correct: "Il faut / Falloir", choices: ["Il faut / Falloir", "Tu / Toi", "Je veux"] },
+      { audio: "j2_yimkin", correct: "Peut-être", choices: ["Bien sûr", "Il faut", "Peut-être"] },
+      { audio: "j2_3ayez", correct: "Vouloir / Je veux", choices: ["Vouloir / Je veux", "J'ai", "Non"] },
+    ],
+    exo2: [
+      { fr: "Bien sûr, je veux.", answer: "tab3an ana 3ayez" },
+      { fr: "Il faut que tu viennes.", answer: "lazem tigi" },
+      { fr: "Peut-être demain.", answer: "yimkin bokra" },
+    ],
+  },
+  {
+    id: 3, title: "Qualités essentielles",
+    words: [
+      { p: "Kwayyes", t: "Bien / Bon", audio: "j3_kwayyes" },
+      { p: "Tamam", t: "Ça va / D'accord", audio: "j3_tamam" },
+      { p: "Wehesh", t: "Mauvais / Moche", audio: "j3_wehesh" },
+      { p: "Keteer", t: "Beaucoup", audio: "j3_keteer" },
+      { p: "Shwayya", t: "Un peu", audio: "j3_shwayya" },
+      { p: "Awi", t: "Très", audio: "j3_awi" },
+      { p: "Ta3ban", t: "Fatigué", audio: "j3_ta3ban" },
+    ],
+    phrases: [
+      { p: "Ana tamam.", t: "Je vais bien.", audio: "j3_p1" },
+      { p: "Da mesh kwayyes.", t: "C'est pas bien.", audio: "j3_p2" },
+      { p: "Ana ta3ban keteer.", t: "Je suis très fatigué.", audio: "j3_p3" },
+      { p: "Shwayya bas.", t: "Un peu seulement.", audio: "j3_p4" },
+      { p: "Da wehesh awi.", t: "C'est vraiment mauvais.", audio: "j3_p5" },
+    ],
+    exo1: [
+      { audio: "j3_tamam", correct: "Ça va / D'accord", choices: ["Bien / Bon", "Ça va / D'accord", "Fatigué"] },
+      { audio: "j3_awi", correct: "Très", choices: ["Beaucoup", "Un peu", "Très"] },
+      { audio: "j3_wehesh", correct: "Mauvais / Moche", choices: ["Mauvais / Moche", "Bien / Bon", "Ça va"] },
+      { audio: "j3_ta3ban", correct: "Fatigué", choices: ["Beaucoup", "Fatigué", "Très"] },
+    ],
+    exo2: [
+      { fr: "Je vais bien.", answer: "ana tamam" },
+      { fr: "C'est vraiment mauvais.", answer: "da wehesh awi" },
+      { fr: "Je suis très fatigué.", answer: "ana ta3ban keteer" },
+    ],
+    dialogue: {
+      tag: "Dialogue J1→J3",
+      audio: "j1j3",
+      lines: [
+        { s: "A", t: "Sabah el kheer, habibi!" },
+        { s: "B", t: "Sabah el noor! Enta tamam?" },
+        { s: "A", t: "Ana tamam, shokran. W enta?" },
+        { s: "B", t: "Ana mesh tamam awi, ya3ni ana ta3ban keteer ennaharda." },
+        { s: "A", t: "Leh? Fii haga ghalat?" },
+        { s: "B", t: "Aywa, 3andi shoghl keteer awi. Mafeesh wa't khalas." },
+        { s: "A", t: "Da mesh sa7! Lazem terta7 shwayya." },
+        { s: "B", t: "La', mesh mumkin. El nas biyistannoo ana 3al shoghl el dohr." },
+        { s: "A", t: "Tamam, yallah. Inshallah bokra kwayyes." },
+        { s: "B", t: "Inshallah habibi, shokran." },
+      ],
+      trad: [
+        "Bonjour mon cher !",
+        "Bonjour ! Tu vas bien ?",
+        "Je vais bien, merci. Et toi ?",
+        "Je vais pas bien, je suis vraiment très fatigué aujourd'hui.",
+        "Pourquoi ? Il y a quelque chose qui va pas ?",
+        "Oui, j'ai énormément de travail. Y'a plus le temps du tout.",
+        "C'est pas normal ! Tu dois te reposer un peu.",
+        "Non, c'est pas possible. Les gens m'attendent au travail à midi.",
+        "Ok, allez. Inch'allah demain ça va mieux.",
+        "Inch'allah mon cher, merci.",
+      ],
+      newWords: [
+        { w: "Sabah el kheer / noor", m: "Bonjour (matin) / réponse" },
+        { w: "Wa't", m: "Temps / Moment" },
+        { w: "Mumkin", m: "Possible" },
+        { w: "3al", m: "Au / Sur le (3ala + el)" },
+      ],
+    },
+  },
+  {
+    id: 4, title: "Questions essentielles",
+    words: [
+      { p: "Eih", t: "Quoi", audio: "j4_eih" },
+      { p: "Feen", t: "Où", audio: "j4_feen" },
+      { p: "Meen", t: "Qui", audio: "j4_meen" },
+      { p: "Leh", t: "Pourquoi", audio: "j4_leh" },
+      { p: "Ezzay", t: "Comment", audio: "j4_ezzay" },
+      { p: "Emta", t: "Quand", audio: "j4_emta" },
+    ],
+    phrases: [
+      { p: "Dah eih?", t: "C'est quoi ça ?", audio: "j4_p1" },
+      { p: "Enta feen?", t: "T'es où ?", audio: "j4_p2" },
+      { p: "Leh mesh kwayyes?", t: "Pourquoi c'est pas bien ?", audio: "j4_p3" },
+      { p: "Ezzay dah?", t: "Comment ça se fait ?", audio: "j4_p4" },
+      { p: "Emta biyigi?", t: "Il vient quand ?", audio: "j4_p5" },
+    ],
+    exo1: [
+      { audio: "j4_feen", correct: "Où", choices: ["Quoi", "Où", "Quand"] },
+      { audio: "j4_leh", correct: "Pourquoi", choices: ["Pourquoi", "Comment", "Qui"] },
+      { audio: "j4_emta", correct: "Quand", choices: ["Où", "Quand", "Pourquoi"] },
+      { audio: "j4_ezzay", correct: "Comment", choices: ["Quoi", "Qui", "Comment"] },
+    ],
+    exo2: [
+      { fr: "T'es où ?", answer: "enta feen" },
+      { fr: "Pourquoi c'est pas bien ?", answer: "leh mesh kwayyes" },
+      { fr: "Il vient quand ?", answer: "emta biyigi" },
+    ],
+  },
+  {
+    id: 5, title: "Verbes d'action",
+    words: [
+      { p: "Raye7", t: "Aller / Je vais", audio: "j5_raye7" },
+      { p: "Biyakol", t: "Manger", audio: "j5_biyakol" },
+      { p: "Biyishrab", t: "Boire", audio: "j5_biyishrab" },
+      { p: "Biyigi", t: "Venir", audio: "j5_biyigi" },
+      { p: "Biyimshi", t: "Partir / Marcher", audio: "j5_biyimshi" },
+      { p: "Biyishtaghal", t: "Travailler", audio: "j5_biyishtaghal" },
+      { p: "Biyisma3", t: "Écouter / Entendre", audio: "j5_biyisma3" },
+      { p: "Biyishoof", t: "Voir", audio: "j5_biyishoof" },
+    ],
+    phrases: [
+      { p: "Ana raye7 feen?", t: "Je vais où ?", audio: "j5_p1" },
+      { p: "3ayez yakol eih?", t: "Tu veux manger quoi ?", audio: "j5_p2" },
+      { p: "Biyigi emta?", t: "Il vient quand ?", audio: "j5_p3" },
+      { p: "Ana mesh raye7.", t: "Je vais pas.", audio: "j5_p4" },
+      { p: "Biyisma3 bas mesh biyishoof.", t: "Il entend mais voit pas.", audio: "j5_p5" },
+    ],
+    exo1: [
+      { audio: "j5_raye7", correct: "Aller / Je vais", choices: ["Venir", "Aller / Je vais", "Partir"] },
+      { audio: "j5_biyakol", correct: "Manger", choices: ["Boire", "Manger", "Voir"] },
+      { audio: "j5_biyisma3", correct: "Écouter / Entendre", choices: ["Écouter / Entendre", "Voir", "Travailler"] },
+      { audio: "j5_biyishoof", correct: "Voir", choices: ["Manger", "Partir / Marcher", "Voir"] },
+    ],
+    exo2: [
+      { fr: "Je vais pas.", answer: "ana mesh raye7" },
+      { fr: "Tu veux manger quoi ?", answer: "3ayez yakol eih" },
+      { fr: "Il vient quand ?", answer: "biyigi emta" },
+    ],
+  },
+  {
+    id: 6, title: "Lieux et noms clés",
+    words: [
+      { p: "Beet", t: "Maison", audio: "j6_beet" },
+      { p: "Shoghl", t: "Travail", audio: "j6_shoghl" },
+      { p: "Taree'", t: "Route / Chemin", audio: "j6_taree" },
+      { p: "Mahal", t: "Magasin", audio: "j6_mahal" },
+      { p: "Arabeya", t: "Voiture", audio: "j6_arabeya" },
+      { p: "Akl", t: "Nourriture", audio: "j6_akl" },
+      { p: "Maya", t: "Eau", audio: "j6_maya" },
+      { p: "Dokkaan", t: "Épicerie / Boutique", audio: "j6_dokkaan" },
+      { p: "Maktab", t: "Bureau", audio: "j6_maktab" },
+      { p: "3imara", t: "Immeuble", audio: "j6_3imara" },
+    ],
+    phrases: [
+      { p: "Ana raye7 el beet.", t: "Je rentre à la maison.", audio: "j6_p1" },
+      { p: "Fii dokkaan feen?", t: "Il y a une épicerie où ?", audio: "j6_p2" },
+      { p: "3ayez maya.", t: "Je veux de l'eau.", audio: "j6_p3" },
+      { p: "El maktab feen?", t: "Le bureau est où ?", audio: "j6_p4" },
+      { p: "El akl mesh kwayyes.", t: "La nourriture est pas bonne.", audio: "j6_p5" },
+    ],
+    exo1: [
+      { audio: "j6_beet", correct: "Maison", choices: ["Bureau", "Maison", "Immeuble"] },
+      { audio: "j6_akl", correct: "Nourriture", choices: ["Eau", "Nourriture", "Voiture"] },
+      { audio: "j6_dokkaan", correct: "Épicerie / Boutique", choices: ["Épicerie / Boutique", "Magasin", "Bureau"] },
+      { audio: "j6_3imara", correct: "Immeuble", choices: ["Maison", "Route", "Immeuble"] },
+    ],
+    exo2: [
+      { fr: "Je veux de l'eau.", answer: "3ayez maya" },
+      { fr: "Le bureau est où ?", answer: "el maktab feen" },
+      { fr: "La nourriture est pas bonne.", answer: "el akl mesh kwayyes" },
+    ],
+    dialogue: {
+      tag: "Dialogue J4→J6",
+      audio: "j4j6",
+      lines: [
+        { s: "A", t: "Tayeb, enta raye7 feen dah el wa't?" },
+        { s: "B", t: "Ana raye7 el dokkaan. 3ayez ashteri akl w maya. El floos ma3aya." },
+        { s: "A", t: "Sa7? Fii dokkaan kwayyes 3ala el taree' — el nas koll yowm biyishtaghalo 3ala el balad dah." },
+        { s: "B", t: "3aref, bas ana mish 3arif el taree' mabyen." },
+        { s: "A", t: "Ezzay mish 3arif? El 3imara el kebeer 3ala el yemeen — biyishoofa el nas koll yowm!" },
+        { s: "B", t: "Aywa aywa, shokran habibi. W el akl feen 3al taree' dah?" },
+        { s: "A", t: "Fii mahal kwayyes ba3d el 3imara, 3ala el yessar. El nas biyoolo enno kwayyes awi." },
+        { s: "B", t: "Tamam, yallah. Ma3lesh 3ala el so'al el keteer!" },
+        { s: "A", t: "La' la', el hamdulillah! Yallah, inshallah tla'i koll haga kwayyes." },
+      ],
+      trad: [
+        "Ok, tu vas où là maintenant ?",
+        "Je vais à l'épicerie. Je veux acheter de la nourriture et de l'eau. J'ai l'argent sur moi.",
+        "Vraiment ? Il y a une bonne épicerie sur la route — les gens travaillent tous les jours dans ce quartier.",
+        "Je sais, mais je vois pas bien la route.",
+        "Comment tu vois pas ? Le grand immeuble à droite — tout le monde le voit chaque jour !",
+        "Oui oui, merci mon cher. Et la nourriture c'est où sur cette route ?",
+        "Il y a un bon magasin après l'immeuble, à gauche. Les gens disent que c'est très bien.",
+        "Ok, allez. Désolé pour toutes les questions !",
+        "Non non, Dieu merci ! Allez, inch'allah tu trouves tout ce qu'il faut.",
+      ],
+      newWords: [
+        { w: "Ashteri", m: "Acheter (1ère personne)" },
+        { w: "El yemeen / el yessar", m: "La droite / La gauche" },
+        { w: "Mabyen", m: "Visible / Évident" },
+        { w: "Tla'i", m: "Tu trouves" },
+      ],
+    },
+  },
+  {
+    id: 7, title: "Liaisons",
+    words: [
+      { p: "W-", t: "Et", audio: "j7_w" },
+      { p: "Bas", t: "Mais / Seulement", audio: "j7_bas" },
+      { p: "3ashan", t: "Parce que / Pour", audio: "j7_3ashan" },
+      { p: "Enno", t: "Que (conjonction)", audio: "j7_enno" },
+      { p: "Ma3a", t: "Avec", audio: "j7_ma3a" },
+      { p: "Men", t: "De / Depuis", audio: "j7_men" },
+      { p: "Zay", t: "Comme / Pareil", audio: "j7_zay" },
+      { p: "Keda", t: "Comme ça", audio: "j7_keda" },
+    ],
+    phrases: [
+      { p: "3ayez akl w maya.", t: "Je veux de la nourriture et de l'eau.", audio: "j7_p1" },
+      { p: "Kwayyes bas keteer.", t: "Bien mais trop.", audio: "j7_p2" },
+      { p: "Mesh raye7 3ashan mafeesh floos.", t: "Je vais pas parce qu'il y a pas d'argent.", audio: "j7_p3" },
+      { p: "Mesh zay el 3adah.", t: "C'est pas comme d'habitude.", audio: "j7_p4" },
+      { p: "Eih dah keda?", t: "C'est quoi ça (comme ça) ?", audio: "j7_p5" },
+    ],
+    exo1: [
+      { audio: "j7_bas", correct: "Mais / Seulement", choices: ["Et", "Mais / Seulement", "Avec"] },
+      { audio: "j7_3ashan", correct: "Parce que / Pour", choices: ["Parce que / Pour", "Que", "De / Depuis"] },
+      { audio: "j7_zay", correct: "Comme / Pareil", choices: ["Comme ça", "Avec", "Comme / Pareil"] },
+      { audio: "j7_keda", correct: "Comme ça", choices: ["Comme / Pareil", "Comme ça", "Et"] },
+    ],
+    exo2: [
+      { fr: "Je vais pas parce qu'il y a pas d'argent.", answer: "mesh raye7 3ashan mafeesh floos" },
+      { fr: "Bien mais trop.", answer: "kwayyes bas keteer" },
+      { fr: "C'est pas comme d'habitude.", answer: "mesh zay el 3adah" },
+    ],
+  },
+  {
+    id: 8, title: "Le temps",
+    words: [
+      { p: "Ennaharda", t: "Aujourd'hui", audio: "j8_ennaharda" },
+      { p: "Bokra", t: "Demain", audio: "j8_bokra" },
+      { p: "Embareh", t: "Hier", audio: "j8_embareh" },
+      { p: "Lessa", t: "Pas encore / Encore", audio: "j8_lessa" },
+      { p: "Ba3d", t: "Après / Plus tard", audio: "j8_ba3d" },
+      { p: "Abl", t: "Avant", audio: "j8_abl" },
+      { p: "Sa3a", t: "Heure", audio: "j8_sa3a" },
+      { p: "Leila", t: "Nuit / Soirée", audio: "j8_leila" },
+      { p: "Dohr", t: "Midi", audio: "j8_dohr" },
+      { p: "Tani", t: "Encore / Un autre", audio: "j8_tani" },
+    ],
+    phrases: [
+      { p: "Ennaharda mesh kwayyes.", t: "Aujourd'hui c'est pas bon.", audio: "j8_p1" },
+      { p: "Bokra biyigi.", t: "Il vient demain.", audio: "j8_p2" },
+      { p: "Lessa mesh geh.", t: "Il est pas encore venu.", audio: "j8_p3" },
+      { p: "El leila kwayyes.", t: "La soirée est bien.", audio: "j8_p4" },
+      { p: "Ba3d el dohr.", t: "Après midi.", audio: "j8_p5" },
+    ],
+    exo1: [
+      { audio: "j8_bokra", correct: "Demain", choices: ["Hier", "Demain", "Aujourd'hui"] },
+      { audio: "j8_lessa", correct: "Pas encore / Encore", choices: ["Pas encore / Encore", "Avant", "Après"] },
+      { audio: "j8_leila", correct: "Nuit / Soirée", choices: ["Midi", "Heure", "Nuit / Soirée"] },
+      { audio: "j8_tani", correct: "Encore / Un autre", choices: ["Encore / Un autre", "Avant", "Hier"] },
+    ],
+    exo2: [
+      { fr: "Aujourd'hui c'est pas bon.", answer: "ennaharda mesh kwayyes" },
+      { fr: "Il est pas encore venu.", answer: "lessa mesh geh" },
+      { fr: "La soirée est bien.", answer: "el leila kwayyes" },
+    ],
+  },
+  {
+    id: 9, title: "Verbes d'état et d'esprit",
+    words: [
+      { p: "Huwwa", t: "Il / Lui", audio: "j9_huwwa" },
+      { p: "Ehna", t: "Nous", audio: "j9_ehna" },
+      { p: "Homma", t: "Ils / Elles", audio: "j9_homma" },
+      { p: "Biyitkallem", t: "Parler", audio: "j9_biyitkallem" },
+      { p: "Biyifham", t: "Comprendre", audio: "j9_biyifham" },
+      { p: "Biyishtiri", t: "Acheter", audio: "j9_biyishtiri" },
+      { p: "Biyidhak", t: "Rire", audio: "j9_biyidhak" },
+      { p: "Biyiz3al", t: "Se fâcher / S'énerver", audio: "j9_biyiz3al" },
+      { p: "Biyinsa", t: "Oublier", audio: "j9_biyinsa" },
+      { p: "Biyiftiker", t: "Penser / Croire", audio: "j9_biyiftiker" },
+    ],
+    phrases: [
+      { p: "Huwwa mesh biyifham.", t: "Il comprend pas.", audio: "j9_p1" },
+      { p: "Ehna biyitkallemo keteer.", t: "On parle beaucoup.", audio: "j9_p2" },
+      { p: "Leh biyiz3al keda?", t: "Pourquoi il s'énerve comme ça ?", audio: "j9_p3" },
+      { p: "Biyiftiker enno sa7.", t: "Il pense que c'est vrai.", audio: "j9_p4" },
+      { p: "Biyinsa koll haga.", t: "Il oublie tout.", audio: "j9_p5" },
+    ],
+    exo1: [
+      { audio: "j9_biyifham", correct: "Comprendre", choices: ["Parler", "Comprendre", "Penser"] },
+      { audio: "j9_biyiz3al", correct: "Se fâcher / S'énerver", choices: ["Rire", "Se fâcher / S'énerver", "Oublier"] },
+      { audio: "j9_biyidhak", correct: "Rire", choices: ["Rire", "Acheter", "Parler"] },
+      { audio: "j9_biyinsa", correct: "Oublier", choices: ["Penser / Croire", "Comprendre", "Oublier"] },
+    ],
+    exo2: [
+      { fr: "Il comprend pas.", answer: "huwwa mesh biyifham" },
+      { fr: "Pourquoi il s'énerve comme ça ?", answer: "leh biyiz3al keda" },
+      { fr: "Il oublie tout.", answer: "biyinsa koll haga" },
+    ],
+    dialogue: {
+      tag: "Dialogue J7→J9",
+      audio: "j7j9",
+      lines: [
+        { s: "Narration", t: "Ahmed biyishtaghal men el sabah lel masa, bas huwwa dayman mesh 3aref izzay yiwsal el beet abl el 3asha." },
+        { s: "Narration", t: "El ragel el gar biyiz3al 3ashan huwwa dayman biyigi ba3d ennos el leila — ya3ni el nas fii el 3imara koll yowm biyisma3o el doshha." },
+        { s: "Narration", t: "El walad biyistanna el akl lewa7do, bas el akl bard 3ashan el wa't keteer." },
+        { s: "Narration", t: "El garaneen biyiftikero enno ragel mesh kwayyes, bas ehna mesh biyiftikero keda — ehna biyiftikero enno biyishtaghal keteer 3ashan el floos mesh keteer 3ala el balad dah." },
+        { s: "Narration", t: "Huwwa biyinsa koll haga, bas sa7 enno mesh biyinsa yigi el beet ba3d el dohr tani." },
+      ],
+      trad: [
+        "Ahmed travaille du matin jusqu'au soir, mais il sait jamais comment rentrer à la maison avant le dîner.",
+        "Le voisin s'énerve parce qu'il rentre toujours après minuit — donc les gens dans l'immeuble entendent le bruit chaque jour.",
+        "Le garçon attend la nourriture tout seul, mais la nourriture est froide parce que ça fait longtemps.",
+        "Les voisins pensent que c'est un homme pas bien, mais nous on pense pas ça — on pense qu'il travaille beaucoup parce que l'argent est pas suffisant dans ce quartier.",
+        "Il oublie tout, mais c'est vrai qu'il oublie pas de rentrer à la maison après midi encore une fois.",
+      ],
+      newWords: [
+        { w: "El sabah / el masa", m: "Le matin / Le soir" },
+        { w: "Ba3d ennos", m: "Après minuit" },
+        { w: "Lewa7do", m: "Tout seul" },
+        { w: "Bard", m: "Froid" },
+      ],
+    },
+  },
+  {
+    id: 10, title: "Logement + expressions finales",
+    words: [
+      { p: "Oda", t: "Chambre", audio: "j10_oda" },
+      { p: "Sho'a'", t: "Appartement", audio: "j10_shoa" },
+      { p: "Atabba'", t: "Étage", audio: "j10_ataba" },
+      { p: "Toba", t: "Quartier / Bloc", audio: "j10_toba" },
+      { p: "3adi", t: "Normal / Pas de problème", audio: "j10_3adi" },
+      { p: "Afwan", t: "De rien", audio: "j10_afwan" },
+      { p: "Mish 3arif", t: "Je sais pas", audio: "j10_mish3arif" },
+      { p: "Kaman", t: "Aussi / En plus", audio: "j10_kaman" },
+      { p: "Dayman", t: "Toujours", audio: "j10_dayman" },
+      { p: "Biyistanna", t: "Attendre", audio: "j10_biyistanna" },
+    ],
+    phrases: [
+      { p: "El oda feen?", t: "La chambre est où ?", audio: "j10_p1" },
+      { p: "El sho'a' el atabba' kam?", t: "L'appartement c'est quel étage ?", audio: "j10_p2" },
+      { p: "Da 3adi, mish moshkela.", t: "C'est normal, pas de problème.", audio: "j10_p3" },
+      { p: "Mish 3arif feen.", t: "Je sais pas où.", audio: "j10_p4" },
+      { p: "Huwwa biyistanna lessa.", t: "Il attend encore.", audio: "j10_p5" },
+    ],
+    exo1: [
+      { audio: "j10_3adi", correct: "Normal / Pas de problème", choices: ["De rien", "Normal / Pas de problème", "Toujours"] },
+      { audio: "j10_dayman", correct: "Toujours", choices: ["Aussi / En plus", "Toujours", "Attendre"] },
+      { audio: "j10_kaman", correct: "Aussi / En plus", choices: ["Aussi / En plus", "Je sais pas", "De rien"] },
+      { audio: "j10_biyistanna", correct: "Attendre", choices: ["Toujours", "Attendre", "Appartement"] },
+    ],
+    exo2: [
+      { fr: "Je sais pas où.", answer: "mish 3arif feen" },
+      { fr: "Il attend encore.", answer: "huwwa biyistanna lessa" },
+      { fr: "C'est normal, pas de problème.", answer: "da 3adi mish moshkela" },
+    ],
+    dialogue: {
+      tag: "Dialogue Final — Café du Caire",
+      audio: "j10",
+      lines: [
+        { s: "A", t: "Sabah el kheer, ya basha!" },
+        { s: "B", t: "Sabah el noor, habibi! Ezzayyak ennaharda?" },
+        { s: "A", t: "Ana tamam, el hamdulillah. Bas ana ta3ban shwayya — mafeesh noom el leila, ya3ni khalas." },
+        { s: "B", t: "Leh? Fii haga?" },
+        { s: "A", t: "Aywa, 3andi moshkela shwayya. El sho'a' beta3i fii doshha keteer men el nas fii el 3imara. El ragel fii el atabba' fow' biyishtaghal el leila kolla, mesh sa7 keda!" },
+        { s: "B", t: "Da mesh kwayyes awi. W enta mesh 3ayez titkallem ma3a el ragel dah?" },
+        { s: "A", t: "Ana biyitkallem ma3ah, bas huwwa biyiftiker enno mesh fii haga. Ghalat keda! El nas koll yowm biyisma3o el doshha!" },
+        { s: "B", t: "Ma3lesh habibi, el nas mesh dayman biyifhamo. Tab3an lazem tishtaghal bokra inshallah?" },
+        { s: "A", t: "Aywa, raye7 el maktab ba3d sa3a. 3andi igtima3 kebeer ma3a nas men el balad kaman." },
+        { s: "B", t: "Tayeb. W el floos 3ala el shoghl dah — kwayyes inshallah?" },
+        { s: "A", t: "Yimkin kwayyes, yimkin la'. Ana mish 3arif lessa. Bas lazem aroo7, el nas biyistannoo ana." },
+        { s: "B", t: "Tamam, yallah, shokran 3ala el kalam. 3andi shoghl kaman." },
+        { s: "A", t: "Afwan habibi. Yallah, ma3 essalama!" },
+        { s: "B", t: "Allah yisallimak!" },
+      ],
+      trad: [
+        "Bonjour, chef !",
+        "Bonjour mon cher ! Comment tu vas aujourd'hui ?",
+        "Je vais bien, Dieu merci. Mais je suis un peu fatigué — y'a eu zéro sommeil cette nuit, c'est fini.",
+        "Pourquoi ? Il y a quelque chose ?",
+        "Oui, j'ai un petit problème. Mon appartement fait beaucoup de bruit à cause des gens dans l'immeuble. L'homme à l'étage au-dessus travaille toute la nuit, c'est pas normal ça !",
+        "C'est vraiment pas bien. Et tu veux pas parler avec cet homme ?",
+        "Je lui parle, mais il pense qu'il y a rien. C'est pas normal ! Les gens entendent le bruit tous les jours !",
+        "C'est pas grave mon cher, les gens comprennent pas toujours. Bien sûr tu dois travailler demain inch'allah ?",
+        "Oui, je vais au bureau dans une heure. J'ai une grande réunion avec des gens du quartier aussi.",
+        "Ok. Et l'argent pour ce travail — ça va inch'allah ?",
+        "Peut-être bien, peut-être pas. Je sais pas encore. Mais il faut que j'y aille, les gens m'attendent.",
+        "Ok allez, merci pour la conversation. Moi j'ai du travail aussi.",
+        "De rien mon cher. Allez, au revoir !",
+        "Au revoir (que Dieu te garde) !",
+      ],
+      newWords: [
+        { w: "Doshha", m: "Bruit / Tapage" },
+        { w: "Fow'", m: "Au-dessus / En haut" },
+        { w: "Igtima3", m: "Réunion" },
+        { w: "Ma3 essalama", m: "Au revoir" },
+        { w: "Allah yisallimak", m: "Réponse à ma3 essalama" },
+      ],
+    },
+  },
+];
+
+// ── STATE ──────────────────────────────────────────────────────────────────
+let S = JSON.parse(localStorage.getItem('arabe10j_v2') || 'null') || {
+  currentDay: 1,
+  step: 'words',       // words | exo1 | exo2 | dialogue | done
+  completedDays: [],
+  exo1Index: 0,
+  exo1Done: false,
+  exo2Index: 0,
+  exo2Done: false,
+};
+function save() { localStorage.setItem('arabe10j_v2', JSON.stringify(S)); }
+function day() { return DAYS[S.currentDay - 1]; }
+function isUnlocked(id) { return id === 1 || S.completedDays.includes(id - 1); }
+
+// ── AUDIO ──────────────────────────────────────────────────────────────────
+let currentAudio = null;
+function playAudio(file, btn) {
+  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+  document.querySelectorAll('.btn-play.playing, .ex1-audio-btn.playing, .btn-dialogue-audio.playing')
+    .forEach(b => b.classList.remove('playing'));
+
+  const a = new Audio(file);
+  currentAudio = a;
+  if (btn) btn.classList.add('playing');
+  a.play().catch(() => { if (btn) { btn.classList.remove('playing'); } });
+  a.onended = () => { if (btn) btn.classList.remove('playing'); currentAudio = null; };
+}
+function wordAudio(slug, btn) { playAudio(`audio/words/${slug}.mp3`, btn); }
+function phraseAudio(slug, btn) { playAudio(`audio/phrases/${slug}.mp3`, btn); }
+function dialogueAudio(slug, btn) { playAudio(`audio/dialogues/${slug}.mp3`, btn); }
+
+// ── RENDER ─────────────────────────────────────────────────────────────────
+function render() {
+  const el = document.getElementById('app');
+  el.innerHTML = '';
+  el.appendChild(renderHeader());
+  el.appendChild(renderDayNav());
+  el.appendChild(renderProgress());
+  el.appendChild(renderStepTabs());
+  const content = document.createElement('div');
+  if (S.step === 'words') renderWords(content);
+  else if (S.step === 'exo1') renderExo1(content);
+  else if (S.step === 'exo2') renderExo2(content);
+  else if (S.step === 'dialogue') renderDialogue(content);
+  else if (S.step === 'done') renderDone(content);
+  el.appendChild(content);
+}
+
+function renderHeader() {
+  const h = document.createElement('div');
+  h.className = 'header';
+  const streak = S.completedDays.length;
+  h.innerHTML = `
+    <div><h1>Arabe Égyptien</h1><p>10 jours · Ammiya cairote</p></div>
+    <div class="streak">${streak > 0 ? '🔥 ' + streak + ' jour' + (streak > 1 ? 's' : '') : ''}</div>`;
+  return h;
+}
+
+function renderDayNav() {
+  const nav = document.createElement('div');
+  nav.className = 'day-nav';
+  DAYS.forEach(d => {
+    const btn = document.createElement('button');
+    btn.className = 'day-btn';
+    btn.textContent = d.id;
+    if (S.completedDays.includes(d.id)) btn.classList.add('done');
+    else if (d.id === S.currentDay) btn.classList.add('active');
+    if (isUnlocked(d.id)) {
+      btn.classList.add('unlocked');
+      btn.onclick = () => goDay(d.id);
+    }
+    nav.appendChild(btn);
+  });
+  return nav;
+}
+
+function renderProgress() {
+  const wrap = document.createElement('div');
+  wrap.className = 'progress-bar';
+  const fill = document.createElement('div');
+  fill.className = 'progress-fill';
+  fill.style.width = (S.completedDays.length / 10 * 100) + '%';
+  wrap.appendChild(fill);
+  return wrap;
+}
+
+function renderStepTabs() {
+  const d = day();
+  const hasDialogue = !!d.dialogue;
+  const steps = hasDialogue
+    ? ['words', 'exo1', 'exo2', 'dialogue']
+    : ['words', 'exo1', 'exo2'];
+  const labels = { words: 'Mots', exo1: 'Écoute', exo2: 'Écris', dialogue: 'Dialogue' };
+  const order = ['words', 'exo1', 'exo2', 'dialogue', 'done'];
+
+  const tabs = document.createElement('div');
+  tabs.className = 'step-tabs';
+  steps.forEach(step => {
+    const t = document.createElement('button');
+    t.className = 'step-tab';
+    t.textContent = labels[step];
+    const stepIdx = order.indexOf(step);
+    const curIdx = order.indexOf(S.step);
+    if (step === S.step) t.classList.add('active');
+    else if (stepIdx < curIdx) { t.classList.add('done-tab'); t.classList.add('reachable'); t.onclick = () => { S.step = step; save(); render(); }; }
+    tabs.appendChild(t);
+  });
+  return tabs;
+}
+
+// WORDS
+function renderWords(el) {
+  const d = day();
+  const label = document.createElement('div');
+  label.className = 'section-label';
+  label.textContent = `Jour ${d.id} — ${d.title}`;
+  el.appendChild(label);
+
+  const list = document.createElement('div');
+  list.className = 'word-list';
+  d.words.forEach(w => {
+    const row = document.createElement('div');
+    row.className = 'word-row';
+    row.innerHTML = `
+      <button class="btn-play" onclick="wordAudio('${w.audio}', this)" title="Écouter">▶</button>
+      <span class="word-phonetic">${w.p}</span>
+      <span class="word-translation">${w.t}</span>`;
+    list.appendChild(row);
+  });
+  el.appendChild(list);
+
+  const plabel = document.createElement('div');
+  plabel.className = 'section-label';
+  plabel.textContent = 'Phrases du jour';
+  el.appendChild(plabel);
+
+  const plist = document.createElement('div');
+  plist.className = 'phrase-list';
+  d.phrases.forEach(ph => {
+    const row = document.createElement('div');
+    row.className = 'phrase-row';
+    row.innerHTML = `
+      <button class="btn-play" onclick="phraseAudio('${ph.audio}', this)" title="Écouter">▶</button>
+      <div class="phrase-texts">
+        <div class="phrase-phonetic">${ph.p}</div>
+        <div class="phrase-translation">${ph.t}</div>
+      </div>`;
+    plist.appendChild(row);
+  });
+  el.appendChild(plist);
+
+  const btn = document.createElement('button');
+  btn.className = 'btn-next-step';
+  btn.textContent = 'Continuer → Exercice écoute';
+  btn.onclick = () => { S.step = 'exo1'; S.exo1Index = 0; S.exo1Done = false; save(); render(); };
+  el.appendChild(btn);
+}
+
+// EXO 1 — RECONNAÎTRE
+function renderExo1(el) {
+  const d = day();
+  const exos = d.exo1;
+  if (S.exo1Index >= exos.length) {
+    S.step = 'exo2'; S.exo2Index = 0; save(); render(); return;
+  }
+  const ex = exos[S.exo1Index];
+
+  const counter = document.createElement('div');
+  counter.className = 'ex-counter';
+  counter.textContent = `Exercice écoute — ${S.exo1Index + 1} / ${exos.length}`;
+  el.appendChild(counter);
+
+  const audioBtn = document.createElement('button');
+  audioBtn.className = 'ex1-audio-btn';
+  audioBtn.innerHTML = '▶ &nbsp; Écouter le mot';
+  audioBtn.onclick = () => wordAudio(ex.audio, audioBtn);
+  el.appendChild(audioBtn);
+
+  const choices = document.createElement('div');
+  choices.className = 'choices';
+  const shuffled = [...ex.choices].sort(() => Math.random() - 0.5);
+  shuffled.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.textContent = c;
+    btn.onclick = () => {
+      if (btn.disabled) return;
+      choices.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
+      if (c === ex.correct) {
+        btn.classList.add('correct');
+        setTimeout(() => { S.exo1Index++; save(); render(); }, 700);
+      } else {
+        btn.classList.add('wrong');
+        choices.querySelectorAll('.choice-btn').forEach(b => {
+          if (b.textContent === ex.correct) b.classList.add('correct');
+        });
+        setTimeout(() => { S.exo1Index++; save(); render(); }, 1200);
+      }
+    };
+    choices.appendChild(btn);
+  });
+  el.appendChild(choices);
+}
+
+// EXO 2 — TRADUCTION LIBRE
+function renderExo2(el) {
+  const d = day();
+  const exos = d.exo2;
+  if (S.exo2Index >= exos.length) {
+    S.step = d.dialogue ? 'dialogue' : 'done'; save(); render(); return;
+  }
+  const ex = exos[S.exo2Index];
+
+  const counter = document.createElement('div');
+  counter.className = 'ex-counter';
+  counter.textContent = `Exercice écriture — ${S.exo2Index + 1} / ${exos.length}`;
+  el.appendChild(counter);
+
+  const prompt = document.createElement('div');
+  prompt.className = 'ex2-prompt';
+  prompt.innerHTML = `<div class="ex2-prompt-label">Traduis en phonétique</div>${ex.fr}`;
+  el.appendChild(prompt);
+
+  const input = document.createElement('input');
+  input.className = 'ex2-input';
+  input.type = 'text';
+  input.placeholder = 'Ta réponse en phonétique...';
+  input.autocomplete = 'off';
+  input.autocorrect = 'off';
+  input.autocapitalize = 'off';
+  input.spellcheck = false;
+  el.appendChild(input);
+
+  const answer = document.createElement('div');
+  answer.className = 'ex2-answer';
+  answer.textContent = '✓ ' + ex.answer;
+  el.appendChild(answer);
+
+  const checkBtn = document.createElement('button');
+  checkBtn.className = 'btn-check';
+  checkBtn.textContent = 'Vérifier';
+  el.appendChild(checkBtn);
+
+  const skipBtn = document.createElement('button');
+  skipBtn.className = 'btn-skip';
+  skipBtn.textContent = 'Passer →';
+  el.appendChild(skipBtn);
+
+  let checked = false;
+  const check = () => {
+    if (checked) { S.exo2Index++; save(); render(); return; }
+    checked = true;
+    const val = input.value.trim().toLowerCase().replace(/['']/g, "'");
+    const exp = ex.answer.toLowerCase();
+    const ok = val === exp || exp.includes(val) && val.length > 3;
+    input.classList.add(ok ? 'correct' : 'wrong');
+    answer.style.display = 'block';
+    checkBtn.textContent = 'Suivant →';
+    input.disabled = true;
+  };
+
+  checkBtn.onclick = check;
+  skipBtn.onclick = () => { S.exo2Index++; save(); render(); };
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') check(); });
+  setTimeout(() => input.focus(), 100);
+}
+
+// DIALOGUE
+function renderDialogue(el) {
+  const d = day().dialogue;
+  if (!d) { renderDone(el); return; }
+
+  const box = document.createElement('div');
+  box.className = 'dialogue-box';
+
+  const tag = document.createElement('div');
+  tag.className = 'dialogue-tag';
+  tag.textContent = d.tag;
+  box.appendChild(tag);
+
+  d.lines.forEach(l => {
+    const line = document.createElement('div');
+    line.className = 'dialogue-line';
+    line.innerHTML = `<div class="dialogue-speaker">${l.s}</div><div class="dialogue-text">${l.t}</div>`;
+    box.appendChild(line);
+  });
+
+  const audioBtn = document.createElement('button');
+  audioBtn.className = 'btn-dialogue-audio';
+  audioBtn.innerHTML = '▶ &nbsp; Écouter le dialogue';
+  audioBtn.onclick = () => dialogueAudio(d.audio, audioBtn);
+  box.appendChild(audioBtn);
+  box.insertAdjacentHTML('beforeend', `<div class="audio-missing">Fichier : audio/dialogues/${d.audio}.mp3</div>`);
+
+  const showTrad = document.createElement('button');
+  showTrad.className = 'btn-show-trad';
+  showTrad.textContent = 'Voir la traduction';
+  box.appendChild(showTrad);
+
+  const tradBlock = document.createElement('div');
+  tradBlock.className = 'trad-block';
+  d.trad.forEach(t => {
+    const line = document.createElement('div');
+    line.className = 'trad-line';
+    line.textContent = '— ' + t;
+    tradBlock.appendChild(line);
+  });
+  box.appendChild(tradBlock);
+  showTrad.onclick = () => {
+    const open = tradBlock.style.display === 'block';
+    tradBlock.style.display = open ? 'none' : 'block';
+    showTrad.textContent = open ? 'Voir la traduction' : 'Cacher la traduction';
+  };
+
+  if (d.newWords.length) {
+    const nw = document.createElement('div');
+    nw.className = 'new-words-block';
+    nw.innerHTML = `<div class="new-words-title">Mots hors liste</div>`;
+    d.newWords.forEach(w => {
+      const row = document.createElement('div');
+      row.className = 'new-word-row';
+      row.innerHTML = `<span>${w.w}</span> → ${w.m}`;
+      nw.appendChild(row);
+    });
+    box.appendChild(nw);
+  }
+
+  el.appendChild(box);
+
+  const btn = document.createElement('button');
+  btn.className = 'btn-next-step';
+  btn.textContent = `Terminer le jour ${day().id} →`;
+  btn.onclick = () => completeDay();
+  el.appendChild(btn);
+}
+
+function renderDone(el) {
+  const d = day();
+  const isLast = d.id === 10;
+  el.innerHTML = `
+    <div class="complete-box">
+      <h2>${isLast ? '🎉 10 jours terminés !' : `Jour ${d.id} terminé !`}</h2>
+      <p>${isLast ? 'Tu as complété le programme. Bonne chance pour les vraies conversations !' : `Jour ${d.id + 1} débloqué.`}</p>
+      ${!isLast ? `<button class="btn-complete" onclick="completeDay()">Jour ${d.id + 1} →</button>` : ''}
+    </div>`;
+}
+
+// ACTIONS
+function completeDay() {
+  const id = day().id;
+  if (!S.completedDays.includes(id)) S.completedDays.push(id);
+  if (id < 10) {
+    S.currentDay = id + 1;
+    S.step = 'words';
+    S.exo1Index = 0;
+    S.exo2Index = 0;
+  } else {
+    S.step = 'done';
+  }
+  save();
+  render();
+}
+
+function goDay(id) {
+  if (!isUnlocked(id)) return;
+  S.currentDay = id;
+  S.step = 'words';
+  S.exo1Index = 0;
+  S.exo2Index = 0;
+  save();
+  render();
+}
+
+render();
+</script>
+</body>
+</html>
