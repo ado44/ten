@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arabe Égyptien — 10 Jours</title>
+<title>Arabe Égyptien — 10 Jours/ Luis enrique pas un crack</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: system-ui, sans-serif; background: #0f0f0f; color: #e8e8e8; min-height: 100vh; }
@@ -44,8 +44,10 @@ body { font-family: system-ui, sans-serif; background: #0f0f0f; color: #e8e8e8; 
 .btn-play { width: 32px; height: 32px; border-radius: 50%; border: 1px solid #2a2a2a; background: #0d1f2f; color: #4a90d9; font-size: 12px; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
 .btn-play:hover { background: #1a2a3a; border-color: #4a90d9; }
 .btn-play.playing { background: #4a90d9; color: #fff; border-color: #4a90d9; }
-.word-phonetic { font-size: 15px; font-weight: 600; color: #e8e8e8; flex: 1; }
-.word-translation { font-size: 13px; color: #666; }
+.word-main { flex: 1; }
+.word-phonetic { font-size: 15px; font-weight: 600; color: #e8e8e8; }
+.word-arabic { font-size: 15px; color: #888; margin-top: 1px; direction: rtl; font-family: 'Segoe UI', Tahoma, sans-serif; }
+.word-translation { font-size: 13px; color: #555; }
 
 /* PHRASE LIST */
 .phrase-list { display: flex; flex-direction: column; gap: 2px; margin-bottom: 28px; }
@@ -127,16 +129,16 @@ const DAYS = [
   {
     id: 1, title: "Exister, pointer, nier",
     words: [
-      { p: "Da / Di", t: "C'est (masc./fém.)", audio: "j1_da" },
-      { p: "Dah", t: "Ça / Celui-ci", audio: "j1_dah" },
-      { p: "Fii", t: "Il y a / Dans", audio: "j1_fii" },
-      { p: "Mafeesh", t: "Il n'y a pas", audio: "j1_mafeesh" },
-      { p: "Mesh", t: "Ne... pas", audio: "j1_mesh" },
-      { p: "Aywa", t: "Oui", audio: "j1_aywa" },
-      { p: "La'", t: "Non", audio: "j1_la" },
-      { p: "Ghalat", t: "Faux / Erreur", audio: "j1_ghalat" },
-      { p: "Haga", t: "Quelque chose", audio: "j1_haga" },
-      { p: "Koll", t: "Tout / Chaque", audio: "j1_koll" },
+      { p: "Da / Di", t: "C'est (masc./fém.)", audio: "j1_da", ar: "ده / دي" },
+      { p: "Dah", t: "Ça / Celui-ci", audio: "j1_dah", ar: "ده" },
+      { p: "Fii", t: "Il y a / Dans", audio: "j1_fii", ar: "في" },
+      { p: "Mafeesh", t: "Il n'y a pas", audio: "j1_mafeesh", ar: "مفيش" },
+      { p: "Mesh", t: "Ne... pas", audio: "j1_mesh", ar: "مش" },
+      { p: "Aywa", t: "Oui", audio: "j1_aywa", ar: "أيوه" },
+      { p: "La'", t: "Non", audio: "j1_la", ar: "لأ" },
+      { p: "Ghalat", t: "Faux / Erreur", audio: "j1_ghalat", ar: "غلط" },
+      { p: "Haga", t: "Quelque chose", audio: "j1_haga", ar: "حاجة" },
+      { p: "Koll", t: "Tout / Chaque", audio: "j1_koll", ar: "كل" },
     ],
     phrases: [
       { p: "Aywa, da sa7.", t: "Oui, c'est vrai.", audio: "j1_p1" },
@@ -161,17 +163,17 @@ const DAYS = [
   {
     id: 2, title: "Toi, vouloir, avoir",
     words: [
-      { p: "Enta", t: "Tu / Toi", audio: "j2_enta" },
-      { p: "3ayez", t: "Vouloir / Je veux", audio: "j2_3ayez" },
-      { p: "3andi", t: "J'ai", audio: "j2_3andi" },
-      { p: "-i (suffixe)", t: "Mon / Ma", audio: "j2_i" },
-      { p: "Tab3an", t: "Bien sûr", audio: "j2_tab3an" },
-      { p: "Lazem", t: "Il faut / Falloir", audio: "j2_lazem" },
-      { p: "Yimkin", t: "Peut-être", audio: "j2_yimkin" },
-      { p: "3aref", t: "Savoir / Connaître", audio: "j2_3aref" },
-      { p: "Mumkin", t: "Possible", audio: "j2_mumkin" },
-      { p: "3andak", t: "Tu as", audio: "j2_3andak" },
-      { p: "Biyis'al", t: "Demander", audio: "j2_biyisal" },
+      { p: "Enta", t: "Tu / Toi", audio: "j2_enta", ar: "إنت" },
+      { p: "3ayez", t: "Vouloir / Je veux", audio: "j2_3ayez", ar: "عايز" },
+      { p: "3andi", t: "J'ai", audio: "j2_3andi", ar: "عندي" },
+      { p: "-i (suffixe)", t: "Mon / Ma", audio: "j2_i", ar: "ـي" },
+      { p: "Tab3an", t: "Bien sûr", audio: "j2_tab3an", ar: "طبعاً" },
+      { p: "Lazem", t: "Il faut / Falloir", audio: "j2_lazem", ar: "لازم" },
+      { p: "Yimkin", t: "Peut-être", audio: "j2_yimkin", ar: "يمكن" },
+      { p: "3aref", t: "Savoir / Connaître", audio: "j2_3aref", ar: "عارف" },
+      { p: "Mumkin", t: "Possible", audio: "j2_mumkin", ar: "ممكن" },
+      { p: "3andak", t: "Tu as", audio: "j2_3andak", ar: "عندك" },
+      { p: "Biyis'al", t: "Demander", audio: "j2_biyisal", ar: "بيسأل" },
     ],
     phrases: [
       { p: "Tab3an, ana 3ayez.", t: "Bien sûr, je veux.", audio: "j2_p1" },
@@ -195,17 +197,17 @@ const DAYS = [
   {
     id: 3, title: "Qualités essentielles",
     words: [
-      { p: "Kwayyes", t: "Bien / Bon", audio: "j3_kwayyes" },
-      { p: "Tamam", t: "Ça va / D'accord", audio: "j3_tamam" },
-      { p: "Wehesh", t: "Mauvais / Moche", audio: "j3_wehesh" },
-      { p: "Keteer", t: "Beaucoup", audio: "j3_keteer" },
-      { p: "Shwayya", t: "Un peu", audio: "j3_shwayya" },
-      { p: "Awi", t: "Très", audio: "j3_awi" },
-      { p: "Ta3ban", t: "Fatigué", audio: "j3_ta3ban" },
-      { p: "Kebeer", t: "Grand / Âgé", audio: "j3_kebeer" },
-      { p: "Soghayyar", t: "Petit / Jeune", audio: "j3_soghayyar" },
-      { p: "Gedeed", t: "Nouveau", audio: "j3_gedeed" },
-      { p: "Biyinam", t: "Dormir", audio: "j3_biyinam" },
+      { p: "Kwayyes", t: "Bien / Bon", audio: "j3_kwayyes", ar: "كويس" },
+      { p: "Tamam", t: "Ça va / D'accord", audio: "j3_tamam", ar: "تمام" },
+      { p: "Wehesh", t: "Mauvais / Moche", audio: "j3_wehesh", ar: "وحش" },
+      { p: "Keteer", t: "Beaucoup", audio: "j3_keteer", ar: "كتير" },
+      { p: "Shwayya", t: "Un peu", audio: "j3_shwayya", ar: "شوية" },
+      { p: "Awi", t: "Très", audio: "j3_awi", ar: "أوي" },
+      { p: "Ta3ban", t: "Fatigué", audio: "j3_ta3ban", ar: "تعبان" },
+      { p: "Kebeer", t: "Grand / Âgé", audio: "j3_kebeer", ar: "كبير" },
+      { p: "Soghayyar", t: "Petit / Jeune", audio: "j3_soghayyar", ar: "صغيّر" },
+      { p: "Gedeed", t: "Nouveau", audio: "j3_gedeed", ar: "جديد" },
+      { p: "Biyinam", t: "Dormir", audio: "j3_biyinam", ar: "بينام" },
     ],
     phrases: [
       { p: "Ana tamam.", t: "Je vais bien.", audio: "j3_p1" },
@@ -263,18 +265,18 @@ const DAYS = [
   {
     id: 4, title: "Questions essentielles",
     words: [
-      { p: "Eih", t: "Quoi", audio: "j4_eih" },
-      { p: "Feen", t: "Où", audio: "j4_feen" },
-      { p: "Meen", t: "Qui", audio: "j4_meen" },
-      { p: "Leh", t: "Pourquoi", audio: "j4_leh" },
-      { p: "Ezzay", t: "Comment", audio: "j4_ezzay" },
-      { p: "Emta", t: "Quand", audio: "j4_emta" },
-      { p: "Kam", t: "Combien", audio: "j4_kam" },
-      { p: "Lamma", t: "Quand / Au moment où", audio: "j4_lamma" },
-      { p: "Law", t: "Si / Au cas où", audio: "j4_law" },
-      { p: "3adatan", t: "D'habitude", audio: "j4_3adatan" },
-      { p: "Wahid", t: "Un / Quelqu'un", audio: "j4_wahid" },
-      { p: "Ziyada", t: "En plus / Trop", audio: "j4_ziyada" },
+      { p: "Eih", t: "Quoi", audio: "j4_eih", ar: "إيه" },
+      { p: "Feen", t: "Où", audio: "j4_feen", ar: "فين" },
+      { p: "Meen", t: "Qui", audio: "j4_meen", ar: "مين" },
+      { p: "Leh", t: "Pourquoi", audio: "j4_leh", ar: "ليه" },
+      { p: "Ezzay", t: "Comment", audio: "j4_ezzay", ar: "إزاي" },
+      { p: "Emta", t: "Quand", audio: "j4_emta", ar: "إمتى" },
+      { p: "Kam", t: "Combien", audio: "j4_kam", ar: "كام" },
+      { p: "Lamma", t: "Quand / Au moment où", audio: "j4_lamma", ar: "لمّا" },
+      { p: "Law", t: "Si / Au cas où", audio: "j4_law", ar: "لو" },
+      { p: "3adatan", t: "D'habitude", audio: "j4_3adatan", ar: "عادةً" },
+      { p: "Wahid", t: "Un / Quelqu'un", audio: "j4_wahid", ar: "واحد" },
+      { p: "Ziyada", t: "En plus / Trop", audio: "j4_ziyada", ar: "زيادة" },
     ],
     phrases: [
       { p: "Dah eih?", t: "C'est quoi ça ?", audio: "j4_p1" },
@@ -301,18 +303,18 @@ const DAYS = [
   {
     id: 5, title: "Mouvements + vie quotidienne",
     words: [
-      { p: "Raye7", t: "Aller / Je vais", audio: "j5_raye7" },
-      { p: "Biyigi", t: "Venir", audio: "j5_biyigi" },
-      { p: "Biyimshi", t: "Partir / Marcher", audio: "j5_biyimshi" },
-      { p: "Biyishtaghal", t: "Travailler", audio: "j5_biyishtaghal" },
-      { p: "Sabah", t: "Matin", audio: "j5_sabah" },
-      { p: "Mesa", t: "Soir", audio: "j5_mesa" },
-      { p: "Nos", t: "Moitié / Milieu", audio: "j5_nos" },
-      { p: "Bard", t: "Froid", audio: "j5_bard" },
-      { p: "Sokhn", t: "Chaud", audio: "j5_sokhn" },
-      { p: "Magnoon", t: "Fou / Dingue", audio: "j5_magnoon" },
-      { p: "Beta3", t: "Appartenant à / Le truc de", audio: "j5_beta3" },
-      { p: "Wa't", t: "Temps / Moment", audio: "j5_wat" },
+      { p: "Raye7", t: "Aller / Je vais", audio: "j5_raye7", ar: "رايح" },
+      { p: "Biyigi", t: "Venir", audio: "j5_biyigi", ar: "بييجي" },
+      { p: "Biyimshi", t: "Partir / Marcher", audio: "j5_biyimshi", ar: "بيمشي" },
+      { p: "Biyishtaghal", t: "Travailler", audio: "j5_biyishtaghal", ar: "بيشتغل" },
+      { p: "Sabah", t: "Matin", audio: "j5_sabah", ar: "صباح" },
+      { p: "Mesa", t: "Soir", audio: "j5_mesa", ar: "مسا" },
+      { p: "Nos", t: "Moitié / Milieu", audio: "j5_nos", ar: "نص" },
+      { p: "Bard", t: "Froid", audio: "j5_bard", ar: "بارد" },
+      { p: "Sokhn", t: "Chaud", audio: "j5_sokhn", ar: "سخن" },
+      { p: "Magnoon", t: "Fou / Dingue", audio: "j5_magnoon", ar: "مجنون" },
+      { p: "Beta3", t: "Appartenant à / Le truc de", audio: "j5_beta3", ar: "بتاع" },
+      { p: "Wa't", t: "Temps / Moment", audio: "j5_wat", ar: "وقت" },
     ],
     phrases: [
       { p: "Ana raye7 feen?", t: "Je vais où ?", audio: "j5_p1" },
@@ -337,20 +339,20 @@ const DAYS = [
   {
     id: 6, title: "Lieux et noms clés",
     words: [
-      { p: "Beet", t: "Maison", audio: "j6_beet" },
-      { p: "Shoghl", t: "Travail", audio: "j6_shoghl" },
-      { p: "Taree'", t: "Route / Chemin", audio: "j6_taree" },
-      { p: "Mahal", t: "Magasin", audio: "j6_mahal" },
-      { p: "Arabeya", t: "Voiture", audio: "j6_arabeya" },
-      { p: "Akl", t: "Nourriture", audio: "j6_akl" },
-      { p: "Maya", t: "Eau", audio: "j6_maya" },
-      { p: "Dokkaan", t: "Épicerie / Boutique", audio: "j6_dokkaan" },
-      { p: "Maktab", t: "Bureau", audio: "j6_maktab" },
-      { p: "3imara", t: "Immeuble", audio: "j6_3imara" },
-      { p: "Moshkela", t: "Problème", audio: "j6_moshkela" },
-      { p: "Kelma", t: "Mot / Phrase", audio: "j6_kelma" },
-      { p: "Biyakol", t: "Manger", audio: "j6_biyakol" },
-      { p: "Biyishrab", t: "Boire", audio: "j6_biyishrab" },
+      { p: "Beet", t: "Maison", audio: "j6_beet", ar: "بيت" },
+      { p: "Shoghl", t: "Travail", audio: "j6_shoghl", ar: "شغل" },
+      { p: "Taree'", t: "Route / Chemin", audio: "j6_taree", ar: "طريق" },
+      { p: "Mahal", t: "Magasin", audio: "j6_mahal", ar: "محل" },
+      { p: "Arabeya", t: "Voiture", audio: "j6_arabeya", ar: "عربية" },
+      { p: "Akl", t: "Nourriture", audio: "j6_akl", ar: "أكل" },
+      { p: "Maya", t: "Eau", audio: "j6_maya", ar: "ميّه" },
+      { p: "Dokkaan", t: "Épicerie / Boutique", audio: "j6_dokkaan", ar: "دكّان" },
+      { p: "Maktab", t: "Bureau", audio: "j6_maktab", ar: "مكتب" },
+      { p: "3imara", t: "Immeuble", audio: "j6_3imara", ar: "عمارة" },
+      { p: "Moshkela", t: "Problème", audio: "j6_moshkela", ar: "مشكلة" },
+      { p: "Kelma", t: "Mot / Phrase", audio: "j6_kelma", ar: "كلمة" },
+      { p: "Biyakol", t: "Manger", audio: "j6_biyakol", ar: "بياكل" },
+      { p: "Biyishrab", t: "Boire", audio: "j6_biyishrab", ar: "بيشرب" },
     ],
     phrases: [
       { p: "Ana raye7 el beet.", t: "Je rentre à la maison.", audio: "j6_p1" },
@@ -406,17 +408,17 @@ const DAYS = [
   {
     id: 7, title: "Liaisons",
     words: [
-      { p: "W-", t: "Et", audio: "j7_w" },
-      { p: "Bas", t: "Mais / Seulement", audio: "j7_bas" },
-      { p: "3ashan", t: "Parce que / Pour", audio: "j7_3ashan" },
-      { p: "Enno", t: "Que (conjonction)", audio: "j7_enno" },
-      { p: "Ma3a", t: "Avec", audio: "j7_ma3a" },
-      { p: "Men", t: "De / Depuis", audio: "j7_men" },
-      { p: "Zay", t: "Comme / Pareil", audio: "j7_zay" },
-      { p: "Keda", t: "Comme ça", audio: "j7_keda" },
-      { p: "Walla", t: "Ou bien / Vraiment ?", audio: "j7_walla" },
-      { p: "Aktar", t: "Plus / Davantage", audio: "j7_aktar" },
-      { p: "Biyisma3", t: "Écouter / Entendre", audio: "j7_biyisma3" },
+      { p: "W-", t: "Et", audio: "j7_w", ar: "وـ" },
+      { p: "Bas", t: "Mais / Seulement", audio: "j7_bas", ar: "بس" },
+      { p: "3ashan", t: "Parce que / Pour", audio: "j7_3ashan", ar: "عشان" },
+      { p: "Enno", t: "Que (conjonction)", audio: "j7_enno", ar: "إنه" },
+      { p: "Ma3a", t: "Avec", audio: "j7_ma3a", ar: "مع" },
+      { p: "Men", t: "De / Depuis", audio: "j7_men", ar: "من" },
+      { p: "Zay", t: "Comme / Pareil", audio: "j7_zay", ar: "زي" },
+      { p: "Keda", t: "Comme ça", audio: "j7_keda", ar: "كده" },
+      { p: "Walla", t: "Ou bien / Vraiment ?", audio: "j7_walla", ar: "وللا" },
+      { p: "Aktar", t: "Plus / Davantage", audio: "j7_aktar", ar: "أكتر" },
+      { p: "Biyisma3", t: "Écouter / Entendre", audio: "j7_biyisma3", ar: "بيسمع" },
     ],
     phrases: [
       { p: "3ayez akl w maya.", t: "Je veux de la nourriture et de l'eau.", audio: "j7_p1" },
@@ -440,18 +442,18 @@ const DAYS = [
   {
     id: 8, title: "Le temps",
     words: [
-      { p: "Ennaharda", t: "Aujourd'hui", audio: "j8_ennaharda" },
-      { p: "Bokra", t: "Demain", audio: "j8_bokra" },
-      { p: "Embareh", t: "Hier", audio: "j8_embareh" },
-      { p: "Lessa", t: "Pas encore / Encore", audio: "j8_lessa" },
-      { p: "Ba3d", t: "Après / Plus tard", audio: "j8_ba3d" },
-      { p: "Abl", t: "Avant", audio: "j8_abl" },
-      { p: "Sa3a", t: "Heure", audio: "j8_sa3a" },
-      { p: "Leila", t: "Nuit / Soirée", audio: "j8_leila" },
-      { p: "Dohr", t: "Midi", audio: "j8_dohr" },
-      { p: "Tani", t: "Encore / Un autre", audio: "j8_tani" },
-      { p: "Badri", t: "Tôt", audio: "j8_badri" },
-      { p: "Delwa'ti", t: "Maintenant", audio: "j8_delwati" },
+      { p: "Ennaharda", t: "Aujourd'hui", audio: "j8_ennaharda", ar: "النهارده" },
+      { p: "Bokra", t: "Demain", audio: "j8_bokra", ar: "بكره" },
+      { p: "Embareh", t: "Hier", audio: "j8_embareh", ar: "إمبارح" },
+      { p: "Lessa", t: "Pas encore / Encore", audio: "j8_lessa", ar: "لسه" },
+      { p: "Ba3d", t: "Après / Plus tard", audio: "j8_ba3d", ar: "بعد" },
+      { p: "Abl", t: "Avant", audio: "j8_abl", ar: "قبل" },
+      { p: "Sa3a", t: "Heure", audio: "j8_sa3a", ar: "ساعة" },
+      { p: "Leila", t: "Nuit / Soirée", audio: "j8_leila", ar: "ليلة" },
+      { p: "Dohr", t: "Midi", audio: "j8_dohr", ar: "ضهر" },
+      { p: "Tani", t: "Encore / Un autre", audio: "j8_tani", ar: "تاني" },
+      { p: "Badri", t: "Tôt", audio: "j8_badri", ar: "بدري" },
+      { p: "Delwa'ti", t: "Maintenant", audio: "j8_delwati", ar: "دلوقتي" },
     ],
     phrases: [
       { p: "Ennaharda mesh kwayyes.", t: "Aujourd'hui c'est pas bon.", audio: "j8_p1" },
@@ -475,22 +477,22 @@ const DAYS = [
   {
     id: 9, title: "Verbes d'état et d'esprit",
     words: [
-      { p: "Huwwa", t: "Il / Lui", audio: "j9_huwwa" },
-      { p: "Ehna", t: "Nous", audio: "j9_ehna" },
-      { p: "Homma", t: "Ils / Elles", audio: "j9_homma" },
-      { p: "Biyitkallem", t: "Parler", audio: "j9_biyitkallem" },
-      { p: "Biyifham", t: "Comprendre", audio: "j9_biyifham" },
-      { p: "Biyishtiri", t: "Acheter", audio: "j9_biyishtiri" },
-      { p: "Biyidhak", t: "Rire", audio: "j9_biyidhak" },
-      { p: "Biyiz3al", t: "Se fâcher", audio: "j9_biyiz3al" },
-      { p: "Biyinsa", t: "Oublier", audio: "j9_biyinsa" },
-      { p: "Biyiftiker", t: "Penser / Croire", audio: "j9_biyiftiker" },
-      { p: "Biyihibb", t: "Aimer", audio: "j9_biyihibb" },
-      { p: "Biyikreh", t: "Détester", audio: "j9_biyikreh" },
-      { p: "Biyigri", t: "Courir / Se dépêcher", audio: "j9_biyigri" },
-      { p: "Biyishil", t: "Porter / Prendre avec soi", audio: "j9_biyishil" },
-      { p: "Mabsoot", t: "Content / Heureux", audio: "j9_mabsoot" },
-      { p: "Za3lan", t: "Fâché / Triste", audio: "j9_za3lan" },
+      { p: "Huwwa", t: "Il / Lui", audio: "j9_huwwa", ar: "هو" },
+      { p: "Ehna", t: "Nous", audio: "j9_ehna", ar: "إحنا" },
+      { p: "Homma", t: "Ils / Elles", audio: "j9_homma", ar: "همّا" },
+      { p: "Biyitkallem", t: "Parler", audio: "j9_biyitkallem", ar: "بيتكلم" },
+      { p: "Biyifham", t: "Comprendre", audio: "j9_biyifham", ar: "بيفهم" },
+      { p: "Biyishtiri", t: "Acheter", audio: "j9_biyishtiri", ar: "بيشتري" },
+      { p: "Biyidhak", t: "Rire", audio: "j9_biyidhak", ar: "بيضحك" },
+      { p: "Biyiz3al", t: "Se fâcher", audio: "j9_biyiz3al", ar: "بيزعل" },
+      { p: "Biyinsa", t: "Oublier", audio: "j9_biyinsa", ar: "بينسى" },
+      { p: "Biyiftiker", t: "Penser / Croire", audio: "j9_biyiftiker", ar: "بيفتكر" },
+      { p: "Biyihibb", t: "Aimer", audio: "j9_biyihibb", ar: "بيحب" },
+      { p: "Biyikreh", t: "Détester", audio: "j9_biyikreh", ar: "بيكره" },
+      { p: "Biyigri", t: "Courir / Se dépêcher", audio: "j9_biyigri", ar: "بيجري" },
+      { p: "Biyishil", t: "Porter / Prendre avec soi", audio: "j9_biyishil", ar: "بيشيل" },
+      { p: "Mabsoot", t: "Content / Heureux", audio: "j9_mabsoot", ar: "مبسوط" },
+      { p: "Za3lan", t: "Fâché / Triste", audio: "j9_za3lan", ar: "زعلان" },
     ],
     phrases: [
       { p: "Huwwa mesh biyifham.", t: "Il comprend pas.", audio: "j9_p1" },
@@ -538,16 +540,16 @@ const DAYS = [
   {
     id: 10, title: "Logement + expressions finales",
     words: [
-      { p: "Oda", t: "Chambre", audio: "j10_oda" },
-      { p: "Sho'a'", t: "Appartement", audio: "j10_shoa" },
-      { p: "Atabba'", t: "Étage", audio: "j10_ataba" },
-      { p: "Toba", t: "Quartier / Bloc", audio: "j10_toba" },
-      { p: "3adi", t: "Normal / Pas de problème", audio: "j10_3adi" },
-      { p: "Afwan", t: "De rien", audio: "j10_afwan" },
-      { p: "Mish 3arif", t: "Je sais pas", audio: "j10_mish3arif" },
-      { p: "Kaman", t: "Aussi / En plus", audio: "j10_kaman" },
-      { p: "Dayman", t: "Toujours", audio: "j10_dayman" },
-      { p: "Biyistanna", t: "Attendre", audio: "j10_biyistanna" },
+      { p: "Oda", t: "Chambre", audio: "j10_oda", ar: "أوضة" },
+      { p: "Sho'a'", t: "Appartement", audio: "j10_shoa", ar: "شقة" },
+      { p: "Atabba'", t: "Étage", audio: "j10_ataba", ar: "طابق" },
+      { p: "Toba", t: "Quartier / Bloc", audio: "j10_toba", ar: "طوبة" },
+      { p: "3adi", t: "Normal / Pas de problème", audio: "j10_3adi", ar: "عادي" },
+      { p: "Afwan", t: "De rien", audio: "j10_afwan", ar: "عفواً" },
+      { p: "Mish 3arif", t: "Je sais pas", audio: "j10_mish3arif", ar: "مش عارف" },
+      { p: "Kaman", t: "Aussi / En plus", audio: "j10_kaman", ar: "كمان" },
+      { p: "Dayman", t: "Toujours", audio: "j10_dayman", ar: "دايماً" },
+      { p: "Biyistanna", t: "Attendre", audio: "j10_biyistanna", ar: "بيستنى" },
     ],
     phrases: [
       { p: "El oda feen?", t: "La chambre est où ?", audio: "j10_p1" },
@@ -746,7 +748,10 @@ function renderWords(el) {
     row.className = 'word-row';
     row.innerHTML = `
       <button class="btn-play" onclick="wordAudio('${w.audio}', this)" title="Écouter">▶</button>
-      <span class="word-phonetic">${w.p}</span>
+      <div class="word-main">
+        <div class="word-phonetic">${w.p}</div>
+        ${w.ar ? `<div class="word-arabic">${w.ar}</div>` : ''}
+      </div>
       <span class="word-translation">${w.t}</span>`;
     list.appendChild(row);
   });
