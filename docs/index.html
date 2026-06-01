@@ -637,9 +637,9 @@ function playAudio(file, btn) {
   a.play().catch(() => { if (btn) { btn.classList.remove('playing'); } });
   a.onended = () => { if (btn) btn.classList.remove('playing'); currentAudio = null; };
 }
-function wordAudio(slug, btn) { playAudio(`audio/words/${slug}.mp3`, btn); }
-function phraseAudio(slug, btn) { playAudio(`audio/phrases/${slug}.mp3`, btn); }
-function dialogueAudio(slug, btn) { playAudio(`audio/dialogues/${slug}.mp3`, btn); }
+function wordAudio(slug, btn) { playAudio(`words/${slug}.mp3`, btn); }
+function phraseAudio(slug, btn) { playAudio(`phrases/${slug}.mp3`, btn); }
+function dialogueAudio(slug, btn) { playAudio(`dialogues/${slug}.mp3`, btn); }
 
 // ── RENDER ─────────────────────────────────────────────────────────────────
 function render() {
