@@ -631,16 +631,38 @@ function isUnlocked(id) { return id === 1 || S.completedDays.includes(id - 1); }
 
 // ── AUDIO ──────────────────────────────────────────────────────────────────
 let currentAudio = null;
+let currentBtn = null;
+function setBtnIcon(btn, icon) {
+  if (!btn) return;
+  if (btn.classList.contains('btn-play')) btn.textContent = icon;
+}
 function playAudio(file, btn) {
+  // même bouton en cours → pause/reprise
+  if (currentAudio && currentBtn === btn) {
+    if (currentAudio.paused) {
+      currentAudio.play();
+      btn.classList.add('playing'); setBtnIcon(btn, '⏸');
+    } else {
+      currentAudio.pause();
+      btn.classList.remove('playing'); setBtnIcon(btn, '▶');
+    }
+    return;
+  }
+  // arrêt de l'audio précédent
   if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+  if (currentBtn) { currentBtn.classList.remove('playing'); setBtnIcon(currentBtn, '▶'); }
   document.querySelectorAll('.btn-play.playing, .ex1-audio-btn.playing, .btn-dialogue-audio.playing')
     .forEach(b => b.classList.remove('playing'));
 
   const a = new Audio(file);
   currentAudio = a;
-  if (btn) btn.classList.add('playing');
-  a.play().catch(() => { if (btn) { btn.classList.remove('playing'); } });
-  a.onended = () => { if (btn) btn.classList.remove('playing'); currentAudio = null; };
+  currentBtn = btn;
+  if (btn) { btn.classList.add('playing'); setBtnIcon(btn, '⏸'); }
+  a.play().catch(() => { if (btn) { btn.classList.remove('playing'); setBtnIcon(btn, '▶'); } });
+  a.onended = () => {
+    if (btn) { btn.classList.remove('playing'); setBtnIcon(btn, '▶'); }
+    currentAudio = null; currentBtn = null;
+  };
 }
 function wordAudio(slug, btn) { playAudio(`words/${slug}.mp3`, btn); }
 function phraseAudio(slug, btn) { playAudio(`phrases/${slug}.mp3`, btn); }
