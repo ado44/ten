@@ -47,6 +47,7 @@ body { font-family: system-ui, sans-serif; background: #0f0f0f; color: #e8e8e8; 
 .word-main { flex: 1; }
 .word-phonetic { font-size: 15px; font-weight: 600; color: #e8e8e8; }
 .word-arabic { font-size: 15px; color: #888; margin-top: 1px; direction: rtl; font-family: 'Segoe UI', Tahoma, sans-serif; }
+.word-note { font-size: 11px; color: #445; margin-top: 3px; font-style: italic; }
 .word-translation { font-size: 13px; color: #555; }
 
 /* PHRASE LIST */
@@ -129,8 +130,7 @@ const DAYS = [
   {
     id: 1, title: "Exister, pointer, nier",
     words: [
-      { p: "Da / Di", t: "C'est (masc./fém.)", audio: "j1_da", ar: "ده / دي" },
-      { p: "Dah", t: "Ça / Celui-ci", audio: "j1_dah", ar: "ده" },
+      { p: "Da / Di / Dol", t: "Ce / Cette / Ces", audio: "j1_da", ar: "ده / دي / دول", note: "da beet = c'est une maison · el beet da = cette maison" },
       { p: "Fii", t: "Il y a / Dans", audio: "j1_fii", ar: "في" },
       { p: "Mafeesh", t: "Il n'y a pas", audio: "j1_mafeesh", ar: "مفيش" },
       { p: "Mesh", t: "Ne... pas", audio: "j1_mesh", ar: "مش" },
@@ -148,7 +148,7 @@ const DAYS = [
       { p: "Da mesh sa7.", t: "C'est pas juste.", audio: "j1_p5" },
     ],
     exo1: [
-      { audio: "j1_dah", correct: "Ça / Celui-ci", choices: ["Ça / Celui-ci", "Il n'y a pas", "Faux / Erreur"] },
+      { audio: "j1_da", correct: "Ce / Cette / Ces", choices: ["Ce / Cette / Ces", "Il n'y a pas", "Faux / Erreur"] },
       { audio: "j1_mafeesh", correct: "Il n'y a pas", choices: ["Oui", "Il n'y a pas", "C'est (masc./fém.)"] },
       { audio: "j1_aywa", correct: "Oui", choices: ["Non", "Oui", "Ne... pas"] },
       { audio: "j1_haga", correct: "Quelque chose", choices: ["Tout / Chaque", "Quelque chose", "Faux / Erreur"] },
@@ -836,6 +836,7 @@ function renderWords(el) {
       <div class="word-main">
         <div class="word-phonetic">${w.p}</div>
         ${w.ar ? `<div class="word-arabic">${w.ar}</div>` : ''}
+        ${w.note ? `<div class="word-note">${w.note}</div>` : ''}
       </div>
       <span class="word-translation">${w.t}</span>`;
     list.appendChild(row);
