@@ -751,20 +751,67 @@ function renderStepTabs() {
 function renderWords(el) {
   const d = day();
 
-  // Bloc immersion — présent chaque jour
+  // Bloc immersion
   const immBox = document.createElement('div');
-  immBox.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:#0d1a0d;border:1px solid #1a3a1a;border-radius:10px;margin-bottom:16px;';
+  immBox.style.cssText = 'padding:12px 14px;background:#0d1a0d;border:1px solid #1a3a1a;border-radius:10px;margin-bottom:16px;';
   immBox.innerHTML = `
-    <div>
-      <div style="font-size:12px;color:#4a8a4a;font-weight:600;margin-bottom:2px;">Immersion du jour</div>
-      <div style="font-size:11px;color:#3a6a3a;">Écoute · répète à voix haute · c'est tout</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <div>
+        <div style="font-size:12px;color:#4a8a4a;font-weight:600;margin-bottom:2px;">Immersion du jour</div>
+        <div style="font-size:11px;color:#3a6a3a;">Écoute · répète à voix haute · c'est tout</div>
+      </div>
+      <button id="btnImmersion" style="width:36px;height:36px;border-radius:50%;border:1px solid #2d5a2d;background:#0d1f0d;color:#4a8a4a;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">▶</button>
     </div>
-    <button id="btnImmersion" style="width:36px;height:36px;border-radius:50%;border:1px solid #2d5a2d;background:#0d1f0d;color:#4a8a4a;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;">▶</button>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span id="immTime" style="font-size:10px;color:#3a6a3a;min-width:32px;">0:00</span>
+      <input id="immSeek" type="range" min="0" max="100" value="0" step="0.1"
+        style="flex:1;height:3px;appearance:none;background:#1a3a1a;border-radius:2px;outline:none;cursor:pointer;accent-color:#4a8a4a;">
+      <span id="immDur" style="font-size:10px;color:#3a6a3a;min-width:32px;text-align:right;">0:00</span>
+    </div>
   `;
-  immBox.querySelector('#btnImmersion').onclick = function() {
-    playAudio('dialogues/immersion.mp3', this);
-  };
   el.appendChild(immBox);
+
+  let immAudio = null;
+  const btnImm = immBox.querySelector('#btnImmersion');
+  const seek = immBox.querySelector('#immSeek');
+  const timeEl = immBox.querySelector('#immTime');
+  const durEl = immBox.querySelector('#immDur');
+
+  function fmtTime(s) {
+    if (!isFinite(s)) return '0:00';
+    return Math.floor(s/60) + ':' + String(Math.floor(s%60)).padStart(2,'0');
+  }
+
+  btnImm.onclick = function() {
+    if (!immAudio) {
+      // stoppe tout audio en cours
+      if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+      if (currentBtn) { currentBtn.classList.remove('playing'); setBtnIcon(currentBtn, '▶'); currentBtn = null; }
+      immAudio = new Audio('dialogues/immersion.mp3');
+      immAudio.ontimeupdate = () => {
+        if (immAudio.duration) {
+          seek.value = (immAudio.currentTime / immAudio.duration) * 100;
+          timeEl.textContent = fmtTime(immAudio.currentTime);
+        }
+      };
+      immAudio.onloadedmetadata = () => { durEl.textContent = fmtTime(immAudio.duration); };
+      immAudio.onended = () => { btnImm.textContent = '▶'; immAudio = null; seek.value = 0; timeEl.textContent = '0:00'; };
+      immAudio.play();
+      btnImm.textContent = '⏸';
+    } else if (immAudio.paused) {
+      immAudio.play();
+      btnImm.textContent = '⏸';
+    } else {
+      immAudio.pause();
+      btnImm.textContent = '▶';
+    }
+  };
+
+  seek.oninput = () => {
+    if (immAudio && immAudio.duration) {
+      immAudio.currentTime = (seek.value / 100) * immAudio.duration;
+    }
+  };
 
   const label = document.createElement('div');
   label.className = 'section-label';
