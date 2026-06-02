@@ -75,11 +75,11 @@ TEXTE J1→J3 — Compréhension ~70%
   — Sabah el kheer, habibi!
   — Sabah el noor! Enta tamam?
   — Ana tamam, shokran. W enta?
-  — Ana mesh tamam awi, ya3ni ana ta3ban keteer ennaharda.
+  — Ana mesh tamam awi. Ana ta3ban keteer lamma biyigi el sabah.
   — Leh? Fii haga ghalat?
-  — Aywa, 3andi shoghl keteer awi. Mafeesh wa't khalas.
+  — Aywa, el wa't beta3i mesh keteer khalis. 3andi shoghl ziyada koll yowm.
   — Da mesh sa7! Lazem terta7 shwayya.
-  — La', mesh mumkin. El nas biyistannoo ana 3al shoghl el dohr.
+  — La', mesh mumkin. Lamma biyigi el dohr, el nas biyistannoo ana 3al shoghl.
   — Tamam, yallah. Inshallah bokra kwayyes.
   — Inshallah habibi, shokran.
 
@@ -87,18 +87,22 @@ Traduction :
   — Bonjour mon cher !
   — Bonjour ! Tu vas bien ?
   — Je vais bien, merci. Et toi ?
-  — Je vais pas bien, je suis vraiment très fatigué aujourd'hui.
+  — Je vais pas bien. Je suis très fatigué quand le matin arrive.
   — Pourquoi ? Il y a quelque chose qui va pas ?
-  — Oui, j'ai énormément de travail. Y'a plus le temps du tout.
+  — Oui, mon temps est vraiment pas suffisant. J'ai du travail en trop chaque jour.
   — C'est pas normal ! Tu dois te reposer un peu.
-  — Non, c'est pas possible. Les gens m'attendent au travail à midi.
+  — Non, c'est pas possible. Quand midi arrive, les gens m'attendent au travail.
   — Ok, allez. Inch'allah demain ça va mieux.
   — Inch'allah mon cher, merci.
+
+Patterns visibles :
+  lamma + [phrase]        →  Quand / Au moment où  (ex: lamma biyigi el sabah)
+  beta3 + [pronom]        →  Possession            (ex: el wa't beta3i = mon temps)
+  ziyada                  →  En trop / Surplus      (ex: shoghl ziyada)
 
 Mots rencontrés hors liste :
   Sabah el kheer / noor  →  Bonjour (matin) / réponse
   Shokran                →  Merci
-  Wa't                   →  Temps / Moment
   Mumkin                 →  Possible / C'est possible
   Terta7                 →  Tu te reposes (lazem terta7 = tu dois te reposer)
   3al                    →  Au / Sur le (contraction de 3ala + el)
@@ -175,36 +179,39 @@ Phrases du jour :
 ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
 TEXTE J4→J6 — Compréhension ~70%
 ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
-  — Tayeb, enta raye7 feen dah el wa't?
-  — Ana raye7 el dokkaan. 3ayez ashteri akl w maya. El floos ma3aya.
-  — Sa7? Fii dokkaan kwayyes 3ala el taree' — el nas koll yowm biyishtaghalo 3ala el balad dah.
+  — Tayeb, enta raye7 feen delwa'ti?
+  — Ana raye7 el dokkaan beta3 el balad. 3ayez ashteri akl w maya. El floos ma3aya.
+  — Sa7? Fii wahid dokkaan kwayyes awi 3ala el taree' el kebeer.
   — 3aref, bas ana mish 3arif el taree' mabyen.
-  — Ezzay mish 3arif? El 3imara el kebeer 3ala el yemeen — biyishoofa el nas koll yowm!
+  — Ezzay mish 3arif? Lamma tigi men hena, el 3imara el kebeer 3ala el yemeen!
   — Aywa aywa, shokran habibi. W el akl feen 3al taree' dah?
   — Fii mahal kwayyes ba3d el 3imara, 3ala el yessar. El nas biyoolo enno kwayyes awi.
   — Tamam, yallah. Ma3lesh 3ala el so'al el keteer!
   — La' la', el hamdulillah! Yallah, inshallah tla'i koll haga kwayyes.
 
 Traduction :
-  — Ok, tu vas où là maintenant ?
-  — Je vais à l'épicerie. Je veux acheter de la nourriture et de l'eau. J'ai l'argent sur moi.
-  — Vraiment ? Il y a une bonne épicerie sur la route — les gens travaillent tous les jours dans ce quartier.
+  — Ok, tu vas où maintenant ?
+  — Je vais à l'épicerie du quartier. Je veux acheter de la nourriture et de l'eau. J'ai l'argent sur moi.
+  — Vraiment ? Il y a une très bonne épicerie sur la grande route.
   — Je sais, mais je vois pas bien la route.
-  — Comment tu vois pas ? Le grand immeuble à droite — tout le monde le voit chaque jour !
+  — Comment tu vois pas ? Quand tu viens d'ici, le grand immeuble est à droite !
   — Oui oui, merci mon cher. Et la nourriture c'est où sur cette route ?
   — Il y a un bon magasin après l'immeuble, à gauche. Les gens disent que c'est très bien.
   — Ok, allez. Désolé pour toutes les questions !
   — Non non, Dieu merci ! Allez, inch'allah tu trouves tout ce qu'il faut.
 
+Patterns visibles :
+  beta3 + [nom]           →  Appartenant à / De   (ex: el dokkaan beta3 el balad = l'épicerie du quartier)
+  wahid + [nom]           →  Un / Un certain       (ex: fii wahid dokkaan = il y a une épicerie)
+  lamma + [phrase]        →  Quand                 (ex: lamma tigi men hena = quand tu viens d'ici)
+
 Mots rencontrés hors liste :
   Ashteri        →  Acheter (1ère personne)
-  Kebeer         →  Grand
   Mabyen         →  Visible / Évident
   Ma3aya         →  Avec moi
-  Koll yowm      →  Chaque jour / Tous les jours
   El yemeen      →  La droite
   El yessar      →  La gauche
-  Tla'i          →  Tu trouves (biyil'a = trouver)
+  Tla'i          →  Tu trouves
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 JOUR 7 — Liaisons
@@ -280,23 +287,28 @@ Phrases du jour :
 TEXTE J7→J9 — Compréhension ~70%
 ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
   Ahmed biyishtaghal men el sabah lel masa, bas huwwa dayman mesh 3aref
-  izzay yiwsal el beet abl el 3asha. El ragel el gar biyiz3al 3ashan huwwa
-  dayman biyigi ba3d ennos el leila — ya3ni el nas fii el 3imara koll yowm
-  biyisma3o el doshha. El walad biyistanna el akl lewa7do,
+  izzay yiwsal el beet abl el 3asha. Lamma biyigi ba3d ennos el leila,
+  el ragel el gar beta3 el atabba' fow' biyiz3al — ya3ni el nas fii el 3imara
+  koll yowm biyisma3o el doshha beta3u. El walad biyistanna el akl lewa7do,
   bas el akl bard 3ashan el wa't keteer.
-  El garaneen biyiftikero enno ragel mesh kwayyes, bas ehna mesh biyiftikero keda —
+  El garaneen biyiftikero enno wahid ragel mesh kwayyes, bas ehna mesh biyiftikero keda —
   ehna biyiftikero enno biyishtaghal keteer 3ashan el floos mesh keteer 3ala el balad dah.
   Huwwa biyinsa koll haga, bas sa7 enno mesh biyinsa yigi el beet ba3d el dohr tani.
 
 Traduction :
   Ahmed travaille du matin jusqu'au soir, mais il sait jamais comment rentrer
-  à la maison avant le dîner. Le voisin s'énerve parce qu'il rentre toujours
-  après minuit — donc les gens dans l'immeuble entendent le bruit chaque jour.
+  à la maison avant le dîner. Quand il rentre après minuit, le voisin de l'étage
+  du dessus s'énerve — donc les gens dans l'immeuble entendent son bruit chaque jour.
   Le garçon attend la nourriture tout seul,
   mais la nourriture est froide parce que ça fait longtemps.
   Les voisins pensent que c'est un homme pas bien, mais nous on pense pas ça —
   on pense qu'il travaille beaucoup parce que l'argent est pas suffisant dans ce quartier.
   Il oublie tout, mais c'est vrai qu'il oublie pas de rentrer à la maison après midi encore une fois.
+
+Patterns visibles :
+  lamma + [phrase]        →  Quand                  (ex: lamma biyigi ba3d ennos = quand il rentre après minuit)
+  beta3 + [nom/pronom]    →  De / Appartenant à      (ex: el gar beta3 el atabba' = le voisin de l'étage / el doshha beta3u = son bruit)
+  wahid + [nom]           →  Un certain / Un type de (ex: wahid ragel = un homme, un certain homme)
 
 Mots rencontrés hors liste :
   El sabah / el masa   →  Le matin / Le soir
@@ -305,7 +317,6 @@ Mots rencontrés hors liste :
   Dayman               →  Toujours
   Ba3d ennos           →  Après minuit
   Doshha               →  Bruit / Tapage
-  Bard                 →  Froid
   Lewa7do              →  Tout seul (lui seul)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -389,6 +400,78 @@ Mots rencontrés hors liste :
   Ma3ah            →  Avec lui
   Ma3 essalama     →  Au revoir
   Allah yisallimak →  Réponse à ma3 essalama
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TEXTE IMMERSION — À écouter chaque jour (J1→J10)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Scène : un marché cairote, le matin. Deux amis — Karim et Hassan.
+Durée à l'oral : ~2 minutes.
+Objectif : ~60% compréhensible au J1, ~95% au J10.
+
+  El sabah beta3 el gom3a, Karim biyigi el sou' beta3 el balad badri.
+  Huwwa 3ayez yishtiri koll haga — akl, maya, w haga soghayyara lil beet.
+  El sou' mesh ba3eed, bas el taree' beta3u magnoon el za7ma.
+
+  — Yallah Hassan! Leh lessa mesh geh? El wa't mesh keteer!
+  — Ana gey, ana gey! El arabeya beta3ti mish laaa'ya makan!
+  — Ma3lesh, yallah! El dokkaan beta3 el khoodar dayman biyib'a za7ma el sabah.
+
+  Lamma yiweesalo el sou', fii nas keteer awi. Karim biyishoof el khoodar
+  w biyis'al el ragel beta3 el dokkaan:
+  — El tamatem dol bikam el kilo?
+  — Talata gneh ya basha!
+  — Talata?! Da keteer awi! 3andak ziyada walla la'?
+  — La' wallahi, da si3r el yowm. El koll biyishtiri bel si3r dah.
+  — Tayeb, kasseblah shwayya, wahid kilo bas.
+  — Tamam, khod.
+
+  Hassan biyidhak w biyool le Karim:
+  — Enta dayman biyiz3al men el si3r!
+  — La', ana mesh biyiz3al. Ana bas mesh 3ayez adfa3 ziyada 3ala haga mesh kwayyes.
+  — Sa7! W el maya feen? Lazem nishtiri maya kaman.
+  — Fii wahid dokkaan soghayyar ba3d keda, 3ala el yessar. Biyihibb el nas hena.
+
+  Ba3d shwayya, homma raye7een el beet. El akl beta3hom mesh bard lessa —
+  w Karim mabsoot 3ashan el floos beta3u mesh ra7et koll haga!
+
+Traduction :
+  Le vendredi matin, Karim vient tôt au marché du quartier.
+  Il veut tout acheter — nourriture, eau, et un petit quelque chose pour la maison.
+  Le marché est pas loin, mais sa route est dingue comme embouteillages.
+
+  — Allez Hassan ! Pourquoi t'es encore pas là ? Y'a pas beaucoup de temps !
+  — J'arrive, j'arrive ! Ma voiture trouve pas de place !
+  — C'est pas grave, allez ! L'épicerie de légumes est toujours bondée le matin.
+
+  Quand ils arrivent au marché, il y a énormément de monde. Karim regarde les légumes
+  et demande au vendeur de la boutique :
+  — Ces tomates c'est combien le kilo ?
+  — Trois livres, chef !
+  — Trois ?! C'est vraiment beaucoup ! T'as un rabais ou pas ?
+  — Non vraiment, c'est le prix du jour. Tout le monde achète à ce prix.
+  — Ok, fais un petit geste, un kilo seulement.
+  — D'accord, prends.
+
+  Hassan rit et dit à Karim :
+  — T'es toujours énervé par le prix !
+  — Non, je suis pas énervé. Je veux juste pas payer en trop pour quelque chose de pas bien.
+  — C'est vrai ! Et l'eau c'est où ? Il faut qu'on achète de l'eau aussi.
+  — Il y a une petite boutique après, à gauche. Les gens ici l'aiment bien.
+
+  Après un moment, ils rentrent à la maison. Leur nourriture est encore pas froide —
+  et Karim est content parce que son argent est pas tout parti !
+
+Mots clés hors liste à retenir :
+  El sou'          →  Le marché (souk)
+  El za7ma         →  La foule / Les embouteillages
+  El khoodar       →  Les légumes
+  Tamatem          →  Tomates
+  Bikam / Si3r     →  C'est combien / Prix
+  Gneh             →  Livre égyptienne (monnaie)
+  Kasseblah        →  Fais un rabais / Diminue
+  Adfa3            →  Payer
+  Gom3a            →  Vendredi
+  Ra7et            →  Est parti / A disparu
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 PRONONCIATION — 5 règles clés
