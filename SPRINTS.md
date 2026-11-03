@@ -60,7 +60,7 @@ But : le parcours complet d'un jour (Mots → Lire → Retrouver → Écrire →
 - [x] Exercice « Lire » (arabe → français) et exercice « Retrouver » (français → arabe), générés au hasard (une seule fonction QCM, 10 questions, 4 choix)
 - [x] Exercice « Écrire » au clavier arabe (`dir="rtl"`, `lang="ar"`), avec correction tolérante et le champ `accept` pour les variantes ; bouton « Voir la réponse »
 - [x] `sw.js` passé en `v2`
-- [ ] Démo : je termine un jour entier sur le téléphone
+- [x] Démo : je termine un jour entier sur le téléphone
 
 ### Sprint 3 — Contenu fusha
 But : des vrais jours de contenu.
@@ -81,3 +81,13 @@ But : des vrais jours de contenu.
 - Incrémenter `VERSION` dans `docs/sw.js` à **chaque** publication, sinon le téléphone garde l'ancienne version.
 - Tests automatisés : Chrome headless piloté en CDP (scratchpad) pour le parcours et les captures ; hors ligne testé à la main.
 - Adresse de vérification après publication : `https://ado44.github.io/ten/docs/`.
+
+### Sprint 2 — 2026-11-03
+**Livré** : parcours complet d'une journée (Mots → Lire → Retrouver → Écrire → Terminé). Les deux QCM passent par une seule fonction. « Écrire » utilise le clavier arabe, avec une correction tolérante et un bouton « Voir la réponse ». Testé sur l'A15, y compris hors ligne.
+
+**Ce qui a bloqué** : rien. L'essai jetable publié sur claude.ai a permis de valider le clavier du téléphone sans fusionner dans `main`.
+
+**À retenir** :
+- Pour tester sur le téléphone sans publier sur GitHub Pages, une page d'essai publiée sur claude.ai suffit.
+- La v2 met environ 50 s à être servie par GitHub Pages après le push.
+- Il n'y a toujours pas de contenu définitif : c'est l'objet du sprint 3.
