@@ -66,6 +66,10 @@ But : le parcours complet d'un jour (Mots → Lire → Retrouver → Écrire →
 But : des vrais jours de contenu.
 - [x] Choisir ensemble le type de mots et de phrases, ainsi que la progression (voir « Règles de contenu » ci-dessous)
 - [ ] Rédiger les premiers jours (30 mots et 5 phrases par jour, vocalisés et relus), en les soumettant jour par jour avant de les intégrer
+  - [x] Jour 1 (le réveil et le programme du jour) et jour 2 (le frigo et la cuisine), validés puis intégrés ; contenu provisoire supprimé
+  - [x] Vérification automatique : 30 mots et 5 phrases par jour, aucun doublon avec les mots déjà connus ni entre les jours, phrases de 4 mots au plus (semaine 1)
+  - [x] Notes : texte plus lisible, passages arabes isolés (`<bdi>`) pour garder le bon sens de lecture ; `sw.js` passé en `v3`
+  - [ ] Jours 3 à 7 de la semaine 1
 - [ ] Démo : je fais le jour 1 en conditions réelles
 
 #### Règles de contenu
