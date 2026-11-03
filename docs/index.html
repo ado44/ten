@@ -48,7 +48,7 @@ body { font-family: system-ui, sans-serif; background: #0f0f0f; color: #e8e8e8; 
 .word-row:hover { background: #1a1a1a; }
 .word-main { flex: 1; }
 .word-translation { font-size: 14px; color: #999; }
-.word-note { font-size: 11px; color: #445; margin-top: 3px; font-style: italic; }
+.word-note { font-size: 13px; color: #77808c; margin-top: 3px; line-height: 1.6; }
 .word-arabic { font-size: 24px; color: #e8e8e8; text-align: right; }
 
 /* PHRASE LIST */
@@ -100,72 +100,92 @@ body { font-family: system-ui, sans-serif; background: #0f0f0f; color: #e8e8e8; 
 <div id="app"></div>
 
 <script>
-// Contenu PROVISOIRE (sprint 1) — le vrai contenu sera choisi au sprint 3.
+// Contenu : voir « Règles de contenu » et « Mots déjà connus » dans SPRINTS.md.
 // words:   { ar (vocalisé), fr, note? }
-// phrases: { ar (vocalisé), fr, accept? (autres réponses acceptées, sprint 2) }
+// phrases: { ar (vocalisé), fr, accept? (autres réponses acceptées) }
 const DAYS = [
   {
-    id: 1, title: "Noms et adjectifs de base",
+    id: 1, title: "Le réveil et le programme du jour",
     words: [
-      { ar: "بَيْتٌ", fr: "Maison" },
-      { ar: "كِتَابٌ", fr: "Livre" },
-      { ar: "قَلَمٌ", fr: "Stylo" },
-      { ar: "بَابٌ", fr: "Porte" },
-      { ar: "وَلَدٌ", fr: "Garçon" },
-      { ar: "بِنْتٌ", fr: "Fille" },
-      { ar: "رَجُلٌ", fr: "Homme" },
-      { ar: "اِمْرَأَةٌ", fr: "Femme" },
-      { ar: "مَاءٌ", fr: "Eau" },
-      { ar: "خُبْزٌ", fr: "Pain" },
-      { ar: "يَوْمٌ", fr: "Jour" },
-      { ar: "لَيْلٌ", fr: "Nuit" },
-      { ar: "شَمْسٌ", fr: "Soleil" },
-      { ar: "قَمَرٌ", fr: "Lune" },
-      { ar: "مَدِينَةٌ", fr: "Ville" },
-      { ar: "طَرِيقٌ", fr: "Chemin / Route" },
-      { ar: "سَيَّارَةٌ", fr: "Voiture" },
-      { ar: "مَدْرَسَةٌ", fr: "École" },
-      { ar: "أَبٌ", fr: "Père" },
-      { ar: "أُمٌّ", fr: "Mère" },
-      { ar: "أَخٌ", fr: "Frère" },
-      { ar: "أُخْتٌ", fr: "Sœur" },
-      { ar: "صَدِيقٌ", fr: "Ami" },
-      { ar: "طَعَامٌ", fr: "Nourriture" },
-      { ar: "وَقْتٌ", fr: "Temps (durée)" },
-      { ar: "عَمَلٌ", fr: "Travail" },
-      { ar: "كَبِيرٌ", fr: "Grand" },
-      { ar: "صَغِيرٌ", fr: "Petit" },
-      { ar: "جَدِيدٌ", fr: "Nouveau" },
-      { ar: "جَمِيلٌ", fr: "Beau" },
+      { ar: "أَسْتَيْقِظُ", fr: "Je me réveille" },
+      { ar: "أَنَامُ", fr: "Je dors" },
+      { ar: "جَيِّدًا", fr: "Bien" },
+      { ar: "بِصَرَاحَةٍ", fr: "Franchement" },
+      { ar: "وَأَنْتَ؟", fr: "Et toi ?" },
+      { ar: "آهِ", fr: "Ah" },
+      { ar: "أَفْهَمُ", fr: "Je comprends", note: "لَا أَفْهَمُ = je ne comprends pas" },
+      { ar: "كُلَّ شَيْءٍ", fr: "Tout" },
+      { ar: "مَا مَعْنَى…؟", fr: "C'est quoi un… ? / Que veut dire… ?" },
+      { ar: "أَعْرِفُ", fr: "Je sais", note: "لَا أَعْرِفُ = je ne sais pas" },
+      { ar: "مَاذَا", fr: "Quoi", note: "Devant un nom, on dit مَا : مَا بَرْنَامَجُكَ؟" },
+      { ar: "أَيْنَ", fr: "Où" },
+      { ar: "الْيَوْمَ", fr: "Aujourd'hui", note: "Vient de يَوْمٌ (jour), déjà connu" },
+      { ar: "الْآنَ", fr: "Maintenant" },
+      { ar: "بَعْدَ قَلِيلٍ", fr: "Tout à l'heure" },
+      { ar: "لَاحِقًا", fr: "Plus tard" },
+      { ar: "بَعْدُ", fr: "Encore (pas encore)", note: "لَا أَعْرِفُ بَعْدُ = je ne sais pas encore · à ne pas confondre avec بَعْدَ قَلِيلٍ" },
+      { ar: "ـِي", fr: "Mon / Ma / Mes", note: "Se colle au nom : دُرُوسِي = mes cours" },
+      { ar: "ـكَ", fr: "Ton / Ta / Tes", note: "Se colle au nom : بَرْنَامَجُكَ = ton programme" },
+      { ar: "بَرْنَامَجٌ", fr: "Programme" },
+      { ar: "أُرَاجِعُ", fr: "Je révise" },
+      { ar: "دُرُوسٌ", fr: "Cours" },
+      { ar: "وَاجِبَاتٌ", fr: "Devoirs" },
+      { ar: "أَحُلُّ", fr: "Je fais (les devoirs)", note: "أَحُلُّ وَاجِبَاتِي = je fais mes devoirs" },
+      { ar: "آكُلُ", fr: "Je mange" },
+      { ar: "فِي الْخَارِجِ", fr: "Dehors" },
+      { ar: "أَذْهَبُ", fr: "Je vais" },
+      { ar: "ثُمَّ", fr: "Puis" },
+      { ar: "لَكِنْ", fr: "Mais" },
+      { ar: "رُبَّمَا", fr: "Peut-être" },
     ],
     phrases: [
-      { ar: "هَذَا بَيْتٌ كَبِيرٌ.", fr: "C'est une grande maison." },
-      { ar: "هَذِهِ سَيَّارَةٌ جَدِيدَةٌ.", fr: "C'est une nouvelle voiture." },
-      { ar: "الْكِتَابُ صَغِيرٌ.", fr: "Le livre est petit." },
-      { ar: "أَبِي فِي الْبَيْتِ.", fr: "Mon père est à la maison." },
-      { ar: "الْمَدِينَةُ جَمِيلَةٌ.", fr: "La ville est belle." },
+      { ar: "أَسْتَيْقِظُ الْآنَ. وَأَنْتَ؟", fr: "Je me réveille là. Et toi ?" },
+      { ar: "مَا بَرْنَامَجُكَ الْيَوْمَ؟", fr: "C'est quoi ton programme aujourd'hui ?" },
+      { ar: "لَا أَفْهَمُ كُلَّ شَيْءٍ.", fr: "Je ne comprends pas tout." },
+      { ar: "آهِ، أَفْهَمُ الْآنَ.", fr: "Ah, je vois maintenant." },
+      { ar: "أُرَاجِعُ دُرُوسِي الْآنَ.", fr: "Je révise mes cours, là.", accept: ["الْآنَ أُرَاجِعُ دُرُوسِي"] },
     ],
   },
   {
-    id: 2, title: "Pronoms et premiers verbes",
+    id: 2, title: "Le frigo et la cuisine",
     words: [
-      { ar: "أَنَا", fr: "Je / Moi" },
-      { ar: "أَنْتَ", fr: "Tu (masc.)" },
-      { ar: "أَنْتِ", fr: "Tu (fém.)" },
-      { ar: "هُوَ", fr: "Il / Lui" },
-      { ar: "هِيَ", fr: "Elle" },
-      { ar: "نَحْنُ", fr: "Nous" },
-      { ar: "ذَهَبَ", fr: "Aller (il est allé)", note: "Les verbes sont donnés au passé, 3e pers. masc. sing." },
-      { ar: "أَكَلَ", fr: "Manger (il a mangé)" },
-      { ar: "شَرِبَ", fr: "Boire (il a bu)" },
-      { ar: "كَتَبَ", fr: "Écrire (il a écrit)" },
+      { ar: "الثَّلَّاجَةُ", fr: "Le frigo", note: "Mot féminin" },
+      { ar: "حَلِيبٌ", fr: "Lait" },
+      { ar: "بَيْضٌ", fr: "Œufs" },
+      { ar: "خُبْزٌ", fr: "Pain" },
+      { ar: "جُبْنٌ", fr: "Fromage" },
+      { ar: "زُبْدَةٌ", fr: "Beurre" },
+      { ar: "دَجَاجٌ", fr: "Poulet" },
+      { ar: "خُضَارٌ", fr: "Légumes" },
+      { ar: "فَوَاكِهُ", fr: "Fruits" },
+      { ar: "عَصِيرٌ", fr: "Jus" },
+      { ar: "مَاءٌ", fr: "Eau" },
+      { ar: "أُرِيدُ", fr: "Je veux" },
+      { ar: "أَحْتَاجُ إِلَى", fr: "J'ai besoin de", note: "Après إِلَى, la fin du mot change : أَحْتَاجُ إِلَى خُبْزٍ" },
+      { ar: "أَشْتَرِي", fr: "J'achète" },
+      { ar: "أَطْبُخُ", fr: "Je cuisine" },
+      { ar: "أَشْرَبُ", fr: "Je bois" },
+      { ar: "أُحِبُّ", fr: "J'aime" },
+      { ar: "يُوجَدُ", fr: "Il y a", note: "لَا يُوجَدُ = il n'y a pas" },
+      { ar: "هَلْ", fr: "Est-ce que", note: "Se met en tête de question : هَلْ يُوجَدُ حَلِيبٌ؟" },
+      { ar: "فَارِغٌ", fr: "Vide", note: "Au féminin : فَارِغَةٌ (الثَّلَّاجَةُ فَارِغَةٌ)" },
+      { ar: "شَيْءٌ", fr: "Quelque chose", note: "Comparer avec كُلَّ شَيْءٍ (tout), jour 1" },
+      { ar: "قَلِيلٌ", fr: "Peu / Un peu", note: "قَلِيلًا مِنْ… = un peu de…" },
+      { ar: "كَثِيرٌ", fr: "Beaucoup" },
+      { ar: "فَقَطْ", fr: "Seulement" },
+      { ar: "أَيْضًا", fr: "Aussi" },
+      { ar: "فِي", fr: "Dans" },
+      { ar: "مِنْ", fr: "De / Du", note: "Devient مِنَ devant الْ : مِنَ الْعَصِيرِ" },
+      { ar: "جَائِعٌ", fr: "Affamé", note: "أَنَا جَائِعٌ = j'ai faim" },
+      { ar: "لَذِيذٌ", fr: "Délicieux" },
+      { ar: "بَارِدٌ", fr: "Froid" },
     ],
     phrases: [
-      { ar: "هُوَ فِي الْمَدْرَسَةِ.", fr: "Il est à l'école." },
-      { ar: "نَحْنُ فِي الْبَيْتِ.", fr: "Nous sommes à la maison." },
-      { ar: "أَكَلَ الْوَلَدُ الْخُبْزَ.", fr: "Le garçon a mangé le pain." },
-      { ar: "شَرِبَتِ الْبِنْتُ الْمَاءَ.", fr: "La fille a bu l'eau." },
-      { ar: "أَنَا صَدِيقُكَ.", fr: "Je suis ton ami." },
+      { ar: "هَلْ يُوجَدُ حَلِيبٌ؟", fr: "Est-ce qu'il y a du lait ?" },
+      { ar: "لَا يُوجَدُ بَيْضٌ.", fr: "Il n'y a pas d'œufs." },
+      { ar: "أَحْتَاجُ إِلَى خُبْزٍ.", fr: "J'ai besoin de pain." },
+      { ar: "أُرِيدُ قَلِيلًا مِنَ الْعَصِيرِ.", fr: "Je veux un peu de jus." },
+      { ar: "الثَّلَّاجَةُ فَارِغَةٌ!", fr: "Le frigo est vide !" },
     ],
   },
 ];
@@ -188,6 +208,10 @@ S = S || {
 function save() { try { localStorage.setItem(STORE_KEY, JSON.stringify(S)); } catch (e) {} }
 function day() { return DAYS.find(d => d.id === S.currentDay) || DAYS[0]; }
 function isUnlocked(id) { return id === 1 || S.completedDays.includes(id - 1); }
+// Isole les passages arabes d'un texte français pour que le sens de lecture reste juste.
+function arInline(text) {
+  return text.replace(/[؀-ۿ]+(?:[\s…]+[؀-ۿ]+)*[…؟]?/g, m => `<bdi class="ar" lang="ar">${m}</bdi>`);
+}
 function shuffle(arr) {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
@@ -292,7 +316,7 @@ function renderWords(el) {
     row.innerHTML = `
       <div class="word-main">
         <div class="word-translation">${w.fr}</div>
-        ${w.note ? `<div class="word-note">${w.note}</div>` : ''}
+        ${w.note ? `<div class="word-note">${arInline(w.note)}</div>` : ''}
       </div>
       <div class="word-arabic ar" lang="ar">${w.ar}</div>`;
     list.appendChild(row);

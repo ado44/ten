@@ -60,13 +60,66 @@ But : le parcours complet d'un jour (Mots → Lire → Retrouver → Écrire →
 - [x] Exercice « Lire » (arabe → français) et exercice « Retrouver » (français → arabe), générés au hasard (une seule fonction QCM, 10 questions, 4 choix)
 - [x] Exercice « Écrire » au clavier arabe (`dir="rtl"`, `lang="ar"`), avec correction tolérante et le champ `accept` pour les variantes ; bouton « Voir la réponse »
 - [x] `sw.js` passé en `v2`
-- [ ] Démo : je termine un jour entier sur le téléphone
+- [x] Démo : je termine un jour entier sur le téléphone
 
 ### Sprint 3 — Contenu fusha
 But : des vrais jours de contenu.
-- [ ] Choisir ensemble le type de mots et de phrases, ainsi que la progression
-- [ ] Rédiger les premiers jours (30 mots et 5 phrases par jour, vocalisés et relus)
+- [x] Choisir ensemble le type de mots et de phrases, ainsi que la progression (voir « Règles de contenu » ci-dessous)
+- [ ] Rédiger les premiers jours (30 mots et 5 phrases par jour, vocalisés et relus), en les soumettant jour par jour avant de les intégrer
+  - [x] Jour 1 (le réveil et le programme du jour) et jour 2 (le frigo et la cuisine), validés puis intégrés ; contenu provisoire supprimé
+  - [x] Vérification automatique : 30 mots et 5 phrases par jour, aucun doublon avec les mots déjà connus ni entre les jours, phrases de 4 mots au plus (semaine 1)
+  - [x] Notes : texte plus lisible, passages arabes isolés (`<bdi>`) pour garder le bon sens de lecture ; `sw.js` passé en `v3`
+  - [ ] Jours 3 à 7 de la semaine 1
 - [ ] Démo : je fais le jour 1 en conditions réelles
+
+#### Règles de contenu
+**But** : parler une fusha naturelle avec mon entourage (des personnes qui apprennent elles aussi la fusha) : petites conversations, questions, parler de ma journée, de mon état d'esprit et de mon niveau, écouter une conversation puis y entrer pour poser une question ou demander une précision.
+
+- **Une situation par jour**, tirée de la vie courante. Les 30 mots du jour permettent d'avoir cette conversation et de la varier.
+- **Uniquement des mots qui servent vraiment** : verbes et objets du quotidien (le réveil, le frigo, les colocs, les cours), petits mots naturels (« franchement », « et toi ? »), mots pour montrer qu'on comprend, qu'on doute ou qu'on n'a pas compris, et connecteurs pour lier les idées ou gagner du temps. Pas de vocabulaire de manuel.
+- **Utilisable dès le jour 1** : les phrases n'emploient que les mots du jour, ceux des jours précédents et les mots déjà connus.
+- **Masculin par défaut** (la personne à qui on parle et moi qui parle), avec une note pour le féminin si besoin.
+- **Pas de futur au début** : le moment se dit avec des mots de temps (الْآنَ, بَعْدَ قَلِيلٍ, لَاحِقًا…).
+- **Une expression figée compte pour un mot** (ex. مَا مَعْنَى…؟).
+
+**Progression par semaine** (les 7 jours d'une semaine gardent le même niveau, seule la situation change) :
+
+| Semaine | Grammaire | Phrases |
+|---|---|---|
+| 1 | « je » au présent, questions, « mon » / « ton », négation لَا | 2 à 4 mots, une seule idée |
+| 2 | + « tu » et « nous » au présent | 4 à 6 mots, deux idées (ثُمَّ, لَكِنْ) |
+| 3 | + « il » / « elle », puis le passé | phrases liées (لِأَنَّ, عِنْدَمَا) |
+| 4 | + le futur | phrases plus longues et nuancées |
+
+**Situations de la semaine 1** : 1. le réveil et le programme du jour · 2. le frigo et la cuisine · 3. la maison avec les colocs · 4. les cours et mon niveau · 5. mon état d'esprit · 6. sortir · 7. entrer dans une conversation.
+
+#### Mots déjà connus
+Ils viennent de la liste de l'ancien `ret.txt`, sans « Tayeb », retiré par moi. Ils ne comptent **jamais** dans les 30 mots du jour, mais ils peuvent apparaître dans les phrases. Chaque nouveau jour est vérifié contre cette liste et contre les jours précédents, pour éviter les doublons.
+
+| Connu (égyptien) | Forme fusha utilisée | Sens |
+|---|---|---|
+| Ana | أَنَا | je, moi |
+| Sa7 | صَحِيحٌ | vrai, exact |
+| 3ala | عَلَى | sur |
+| Yowm | يَوْمٌ | jour |
+| Nas | نَاسٌ | gens |
+| Ragel | رَجُلٌ | homme |
+| Bint | بِنْتٌ | fille |
+| Balad | بَلَدٌ | pays |
+| Leila | لَيْلَةٌ | nuit, soirée |
+| Dohr | ظُهْرٌ | midi |
+| Floos | نُقُودٌ (فُلُوسٌ est compris) | argent |
+| Ya3ni | يَعْنِي | c'est-à-dire, enfin |
+| Shokran | شُكْرًا | merci |
+| Habibi | حَبِيبِي | mon cher |
+| Inshallah | إِنْ شَاءَ اللّٰهُ | si Dieu le veut |
+| Aywa | نَعَمْ | oui |
+| La' | لَا | non, et la négation لَا devant un verbe |
+| Ma3lesh | لَا بَأْسَ | ce n'est pas grave |
+| Yallah | هَيَّا | allez, on y va |
+| Khalas | يَكْفِي / انْتَهَى | ça suffit / c'est fini |
+
+À ne pas confondre : الْيَوْمَ « aujourd'hui » est un mot nouveau, même s'il vient de يَوْمٌ « jour ».
 
 ## Rétros
 
@@ -81,3 +134,13 @@ But : des vrais jours de contenu.
 - Incrémenter `VERSION` dans `docs/sw.js` à **chaque** publication, sinon le téléphone garde l'ancienne version.
 - Tests automatisés : Chrome headless piloté en CDP (scratchpad) pour le parcours et les captures ; hors ligne testé à la main.
 - Adresse de vérification après publication : `https://ado44.github.io/ten/docs/`.
+
+### Sprint 2 — 2026-11-03
+**Livré** : parcours complet d'une journée (Mots → Lire → Retrouver → Écrire → Terminé). Les deux QCM passent par une seule fonction. « Écrire » utilise le clavier arabe, avec une correction tolérante et un bouton « Voir la réponse ». Testé sur l'A15, y compris hors ligne.
+
+**Ce qui a bloqué** : rien. L'essai jetable publié sur claude.ai a permis de valider le clavier du téléphone sans fusionner dans `main`.
+
+**À retenir** :
+- Pour tester sur le téléphone sans publier sur GitHub Pages, une page d'essai publiée sur claude.ai suffit.
+- La v2 met environ 50 s à être servie par GitHub Pages après le push.
+- Il n'y a toujours pas de contenu définitif : c'est l'objet du sprint 3.
