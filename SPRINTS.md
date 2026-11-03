@@ -35,7 +35,7 @@
 | Exercices QCM | distracteurs écrits à la main / tirés au hasard | **tirés au hasard** parmi les 30 mots du jour, donc aucune donnée d'exercice à écrire |
 | Écriture | translittération / clavier arabe / ordre des mots | **clavier arabe** ; la correction ignore les voyelles et unifie les variantes (أ/إ/آ→ا, ة→ه, ى→ي, ponctuation, espaces) |
 | Police arabe | système / police embarquée (Amiri, Noto Naskh) | **système** d'abord ; on embarque une police si le tashkîl s'affiche mal sur l'A15 |
-| Progression | clé `localStorage` | nouvelle clé `arabe_fusha_v1` (on repart de zéro) |
+| Progression | clé `localStorage` | `arabe_fusha_v2` depuis le contenu définitif (changer la clé = remise à zéro) |
 
 ## Risques
 - **Tashkîl illisible ou mal placé** avec la police système d'Android → plan B : embarquer une police arabe (woff2) dans `docs/`, qui sera mise en cache par le service worker.

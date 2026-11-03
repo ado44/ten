@@ -194,7 +194,9 @@ const QCM_COUNT = 10;   // questions tirées parmi les mots du jour (Lire, Retro
 const QCM_CHOICES = 4;
 
 // ── STATE ──────────────────────────────────────────────────────────────────
-const STORE_KEY = 'arabe_fusha_v1';
+// Changer la clé remet la progression à zéro (v2 : contenu définitif de la semaine 1).
+const STORE_KEY = 'arabe_fusha_v2';
+try { localStorage.removeItem('arabe_fusha_v1'); } catch (e) {}
 let S = null;
 try { S = JSON.parse(localStorage.getItem(STORE_KEY)); } catch (e) {}
 S = S || {
