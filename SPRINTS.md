@@ -22,7 +22,7 @@
 
 ## Organisation
 - Sprints courts, une branche par sprint (`sprint-1`, `sprint-2`…). Démo, rétro et commit en fin de sprint.
-- Fusion dans `main` seulement avec mon accord. **Attention** : GitHub Pages sert `main/docs`, donc la démo hors ligne sur le téléphone demande une fusion.
+- Fusion dans `main` seulement avec mon accord. **Attention** : GitHub Pages publie la racine de `main`, et l'app est à **https://ado44.github.io/ten/docs/**. La démo sur le téléphone demande donc une fusion.
 
 ## Décisions
 
@@ -30,7 +30,7 @@
 |---|---|---|
 | Stack | vanilla dans un seul `index.html` / framework | **vanilla, un seul fichier** (inchangé) |
 | Hors ligne | PWA (manifest + service worker) / fichier local | **PWA**, cache « cache-first » avec un numéro de version à incrémenter à chaque publication |
-| Hébergement | GitHub Pages (`main/docs`) | **GitHub Pages** (inchangé) |
+| Hébergement | GitHub Pages | **GitHub Pages**, racine de `main`, app sous `/ten/docs/` (inchangé) |
 | Affichage | arabe vocalisé / translittération / les deux | **arabe vocalisé** (pas de translittération pour l'instant) |
 | Exercices QCM | distracteurs écrits à la main / tirés au hasard | **tirés au hasard** parmi les 30 mots du jour, donc aucune donnée d'exercice à écrire |
 | Écriture | translittération / clavier arabe / ordre des mots | **clavier arabe** ; la correction ignore les voyelles et unifie les variantes (أ/إ/آ→ا, ة→ه, ى→ي, ponctuation, espaces) |
@@ -52,7 +52,7 @@ But : une app allégée, sans audio, installable et utilisable en mode avion.
 - [x] Quelques jours de contenu provisoire, pour tester (jour 1 : 30 mots ; jour 2 : 10 mots)
 - [x] L'exercice d'écoute devient « Lire » (arabe → français, 10 questions et 4 choix tirés au hasard), avancé du sprint 2 parce qu'il dépendait de l'audio. « Écrire » est retiré jusqu'au sprint 2.
 - [x] `manifest.json`, icônes 192/512 et `sw.js`, enregistrés depuis `index.html`
-- [ ] Démo : je l'installe sur l'A15, je passe en mode avion, l'app s'ouvre et garde ma progression
+- [x] Démo : je l'installe sur l'A15, je passe en mode avion, l'app s'ouvre et garde ma progression
 
 ### Sprint 2 — Exercices
 But : le parcours complet d'un jour (Mots → Lire → Retrouver → Écrire → Terminé).
@@ -68,4 +68,15 @@ But : des vrais jours de contenu.
 - [ ] Démo : je fais le jour 1 en conditions réelles
 
 ## Rétros
-_(à remplir en fin de sprint)_
+
+### Sprint 1 — 2026-11-03
+**Livré** : passage à la fusha (contenu provisoire, jours 1-2), audio, dialogues et immersion supprimés, exercice « Lire » généré au hasard, PWA installée sur l'A15 et fonctionnelle en mode avion. Le tashkîl s'affiche bien avec la police système, donc pas besoin d'embarquer une police.
+
+**Ce qui a bloqué** :
+- Dans le bac à sable de Claude, Chrome headless ne peut pas utiliser CacheStorage (« Unexpected internal error »). Le test hors ligne a donc été fait à la main sur PC (DevTools → Offline), puis sur le téléphone.
+- J'ai cru à une erreur 404 sur GitHub Pages parce que j'avais vérifié la mauvaise adresse : l'app est sous `/ten/docs/`.
+
+**À retenir** :
+- Incrémenter `VERSION` dans `docs/sw.js` à **chaque** publication, sinon le téléphone garde l'ancienne version.
+- Tests automatisés : Chrome headless piloté en CDP (scratchpad) pour le parcours et les captures ; hors ligne testé à la main.
+- Adresse de vérification après publication : `https://ado44.github.io/ten/docs/`.
