@@ -73,6 +73,20 @@ body { font-family: system-ui, sans-serif; background: #0f0f0f; color: #e8e8e8; 
 .choice-btn.correct { background: #0d1f0d; border-color: #2d5a2d; color: #4a8a4a; }
 .choice-btn.wrong { background: #1f0d0d; border-color: #5a2d2d; color: #8a4a4a; }
 .choice-btn:disabled { cursor: default; }
+.choice-btn.ar { text-align: right; font-size: 22px; padding: 6px 16px; }
+
+/* EXO 3 — ÉCRIRE */
+.ex3-prompt { font-size: 16px; color: #ccc; text-align: center; padding: 20px; background: #141414; border-radius: 12px; margin-bottom: 16px; }
+.ex3-prompt-label { font-size: 11px; color: #444; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+.ex3-input { width: 100%; resize: none; background: #111; border: 1px solid #2a2a2a; border-radius: 10px; padding: 10px 14px; color: #e8e8e8; font-size: 22px; outline: none; margin-bottom: 10px; }
+.ex3-input:focus { border-color: #4a90d9; }
+.ex3-input.correct { border-color: #2d5a2d; background: #0d1f0d; }
+.ex3-input.wrong { border-color: #5a2d2d; background: #1f0d0d; }
+.ex3-answer { font-size: 22px; color: #4a8a4a; margin-bottom: 12px; padding: 6px 12px; background: #0d1f0d; border-radius: 8px; text-align: right; }
+.btn-check { width: 100%; padding: 12px; background: #141414; border: 1px solid #2a2a2a; color: #888; border-radius: 10px; font-size: 14px; cursor: pointer; }
+.btn-check:hover { border-color: #4a90d9; color: #4a90d9; }
+.btn-skip { width: 100%; padding: 10px; background: transparent; border: none; color: #555; font-size: 13px; cursor: pointer; margin-top: 4px; }
+.btn-skip:hover { color: #888; }
 
 /* COMPLETE */
 .complete-box { text-align: center; padding: 40px 20px; }
@@ -156,8 +170,8 @@ const DAYS = [
   },
 ];
 
-const EXO1_COUNT = 10;   // questions tirées parmi les mots du jour
-const EXO1_CHOICES = 4;
+const QCM_COUNT = 10;   // questions tirées parmi les mots du jour (Lire, Retrouver)
+const QCM_CHOICES = 4;
 
 // ── STATE ──────────────────────────────────────────────────────────────────
 const STORE_KEY = 'arabe_fusha_v1';
@@ -165,10 +179,11 @@ let S = null;
 try { S = JSON.parse(localStorage.getItem(STORE_KEY)); } catch (e) {}
 S = S || {
   currentDay: 1,
-  step: 'words',       // words | exo1 | done
+  step: 'words',       // words | exo1 (Lire) | exo2 (Retrouver) | exo3 (Écrire) | done
   completedDays: [],
-  exo1Index: 0,
-  exo1Queue: [],       // indices des mots interrogés
+  exo1Index: 0, exo1Queue: [],   // indices des mots interrogés
+  exo2Index: 0, exo2Queue: [],
+  exo3Index: 0, exo3Queue: [],   // indices des phrases
 };
 function save() { try { localStorage.setItem(STORE_KEY, JSON.stringify(S)); } catch (e) {} }
 function day() { return DAYS.find(d => d.id === S.currentDay) || DAYS[0]; }
@@ -192,7 +207,8 @@ function render() {
   el.appendChild(renderStepTabs());
   const content = document.createElement('div');
   if (S.step === 'words') renderWords(content);
-  else if (S.step === 'exo1') renderExo1(content);
+  else if (S.step === 'exo1' || S.step === 'exo2') renderQcm(content, S.step);
+  else if (S.step === 'exo3') renderExo3(content);
   else if (S.step === 'done') renderDone(content);
   el.appendChild(content);
 }
@@ -236,9 +252,9 @@ function renderProgress() {
 }
 
 function renderStepTabs() {
-  const steps = ['words', 'exo1'];
-  const labels = { words: 'Mots', exo1: 'Lire' };
-  const order = ['words', 'exo1', 'done'];
+  const steps = ['words', 'exo1', 'exo2', 'exo3'];
+  const labels = { words: 'Mots', exo1: 'Lire', exo2: 'Retrouver', exo3: 'Écrire' };
+  const order = ['words', 'exo1', 'exo2', 'exo3', 'done'];
 
   const tabs = document.createElement('div');
   tabs.className = 'step-tabs';
@@ -249,7 +265,11 @@ function renderStepTabs() {
     const stepIdx = order.indexOf(step);
     const curIdx = order.indexOf(S.step);
     if (step === S.step) t.classList.add('active');
-    else if (stepIdx < curIdx) { t.classList.add('done-tab'); t.classList.add('reachable'); t.onclick = () => { if (step === 'exo1') return startExo1(); S.step = step; save(); render(); }; }
+    else if (stepIdx < curIdx) { t.classList.add('done-tab'); t.classList.add('reachable'); t.onclick = () => {
+      if (QCM[step]) return startQcm(step);
+      if (step === 'exo3') return startExo3();
+      S.step = step; save(); render();
+    }; }
     tabs.appendChild(t);
   });
   return tabs;
@@ -299,64 +319,160 @@ function renderWords(el) {
   const btn = document.createElement('button');
   btn.className = 'btn-next-step';
   btn.textContent = 'Continuer → Lire';
-  btn.onclick = () => startExo1();
+  btn.onclick = () => startQcm('exo1');
   el.appendChild(btn);
 }
 
-// EXO 1 — LIRE (arabe → français)
-function startExo1() {
+// EXO 1 & 2 — QCM : Lire (arabe → français) et Retrouver (français → arabe)
+const QCM = {
+  exo1: { label: 'Lire', ask: w => w.ar, answer: w => w.fr, askAr: true, next: () => startQcm('exo2') },
+  exo2: { label: 'Retrouver', ask: w => w.fr, answer: w => w.ar, askAr: false, next: () => startExo3() },
+};
+
+function startQcm(step) {
   const idx = day().words.map((_, i) => i);
-  S.exo1Queue = shuffle(idx).slice(0, EXO1_COUNT);
-  S.exo1Index = 0;
-  S.step = 'exo1';
+  S[step + 'Queue'] = shuffle(idx).slice(0, QCM_COUNT);
+  S[step + 'Index'] = 0;
+  S.step = step;
   save(); render();
 }
 
-function renderExo1(el) {
+function renderQcm(el, step) {
   const d = day();
-  if (!S.exo1Queue || !S.exo1Queue.length) { startExo1(); return; }
-  if (S.exo1Index >= S.exo1Queue.length) {
-    if (!S.completedDays.includes(d.id)) S.completedDays.push(d.id);
-    S.step = 'done'; save(); render(); return;
-  }
-  const word = d.words[S.exo1Queue[S.exo1Index]];
-  const others = shuffle(d.words.filter(w => w !== word)).slice(0, EXO1_CHOICES - 1);
+  const q = QCM[step];
+  const queue = S[step + 'Queue'];
+  if (!queue || !queue.length) { startQcm(step); return; }
+  if (S[step + 'Index'] >= queue.length) { q.next(); return; }
+  const word = d.words[queue[S[step + 'Index']]];
+  const others = shuffle(d.words.filter(w => w !== word)).slice(0, QCM_CHOICES - 1);
   const options = shuffle([word, ...others]);
+  const advance = () => { S[step + 'Index']++; save(); render(); };
 
   const counter = document.createElement('div');
   counter.className = 'ex-counter';
-  counter.textContent = `Lire — ${S.exo1Index + 1} / ${S.exo1Queue.length}`;
+  counter.textContent = `${q.label} — ${S[step + 'Index'] + 1} / ${queue.length}`;
   el.appendChild(counter);
 
   const prompt = document.createElement('div');
-  prompt.className = 'ex1-word ar';
-  prompt.lang = 'ar';
-  prompt.textContent = word.ar;
+  prompt.className = q.askAr ? 'ex1-word ar' : 'ex1-word';
+  if (q.askAr) prompt.lang = 'ar';
+  prompt.textContent = q.ask(word);
   el.appendChild(prompt);
 
   const choices = document.createElement('div');
   choices.className = 'choices';
   options.forEach(o => {
     const btn = document.createElement('button');
-    btn.className = 'choice-btn';
-    btn.textContent = o.fr;
+    btn.className = q.askAr ? 'choice-btn' : 'choice-btn ar';
+    if (!q.askAr) btn.lang = 'ar';
+    btn.textContent = q.answer(o);
     btn.onclick = () => {
       if (btn.disabled) return;
       choices.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
       if (o === word) {
         btn.classList.add('correct');
-        setTimeout(() => { S.exo1Index++; save(); render(); }, 700);
+        setTimeout(advance, 700);
       } else {
         btn.classList.add('wrong');
         choices.querySelectorAll('.choice-btn').forEach(b => {
-          if (b.textContent === word.fr) b.classList.add('correct');
+          if (b.textContent === q.answer(word)) b.classList.add('correct');
         });
-        setTimeout(() => { S.exo1Index++; save(); render(); }, 1200);
+        setTimeout(advance, 1200);
       }
     };
     choices.appendChild(btn);
   });
   el.appendChild(choices);
+}
+
+// EXO 3 — ÉCRIRE (français → arabe, clavier arabe)
+// Correction tolérante validée par l'essai du sprint 2 : ignore voyelles, variantes de hamza,
+// ة/ه, ى/ي, tatweel, caractères invisibles, ponctuation et espaces en trop.
+function normalize(s) {
+  return s.normalize('NFKC')
+    .replace(/[ً-ٰٟۖ-ۭ]/g, '')
+    .replace(/ـ/g, '')
+    .replace(/[​-‏‪-‮⁦-⁩﻿]/g, '')
+    .replace(/[أإآٱ]/g, 'ا')
+    .replace(/ؤ/g, 'و').replace(/ئ/g, 'ي')
+    .replace(/ة/g, 'ه').replace(/ى/g, 'ي')
+    .replace(/[.,!?؟،؛:;«»"'()\-–—]/g, ' ')
+    .replace(/\s+/g, ' ').trim();
+}
+function isCorrect(input, phrase) {
+  const val = normalize(input);
+  return val !== '' && [phrase.ar, ...(phrase.accept || [])].some(a => normalize(a) === val);
+}
+
+function startExo3() {
+  S.exo3Queue = shuffle(day().phrases.map((_, i) => i));
+  S.exo3Index = 0;
+  S.step = 'exo3';
+  save(); render();
+}
+
+function renderExo3(el) {
+  const d = day();
+  if (!S.exo3Queue || !S.exo3Queue.length) { startExo3(); return; }
+  if (S.exo3Index >= S.exo3Queue.length) {
+    if (!S.completedDays.includes(d.id)) S.completedDays.push(d.id);
+    S.step = 'done'; save(); render(); return;
+  }
+  const ph = d.phrases[S.exo3Queue[S.exo3Index]];
+  const advance = () => { S.exo3Index++; save(); render(); };
+
+  const counter = document.createElement('div');
+  counter.className = 'ex-counter';
+  counter.textContent = `Écrire — ${S.exo3Index + 1} / ${S.exo3Queue.length}`;
+  el.appendChild(counter);
+
+  const prompt = document.createElement('div');
+  prompt.className = 'ex3-prompt';
+  prompt.innerHTML = `<div class="ex3-prompt-label">Écris en arabe</div>${ph.fr}`;
+  el.appendChild(prompt);
+
+  const input = document.createElement('textarea');
+  input.className = 'ex3-input ar';
+  input.dir = 'rtl';
+  input.lang = 'ar';
+  input.rows = 2;
+  input.placeholder = 'اكتب هنا…';
+  input.autocomplete = 'off';
+  input.setAttribute('autocorrect', 'off');
+  input.autocapitalize = 'off';
+  input.spellcheck = false;
+  el.appendChild(input);
+
+  const answer = document.createElement('div');
+  answer.className = 'ex3-answer ar';
+  answer.lang = 'ar';
+  answer.textContent = ph.ar;
+  answer.hidden = true;
+  el.appendChild(answer);
+
+  const checkBtn = document.createElement('button');
+  checkBtn.className = 'btn-check';
+  checkBtn.textContent = 'Vérifier';
+  el.appendChild(checkBtn);
+
+  const skipBtn = document.createElement('button');
+  skipBtn.className = 'btn-skip';
+  skipBtn.textContent = 'Voir la réponse';
+  el.appendChild(skipBtn);
+
+  let checked = false;
+  const reveal = ok => {
+    checked = true;
+    input.classList.add(ok ? 'correct' : 'wrong');
+    input.disabled = true;
+    answer.hidden = false;
+    checkBtn.textContent = 'Suivant →';
+    skipBtn.hidden = true;
+  };
+  checkBtn.onclick = () => checked ? advance() : reveal(isCorrect(input.value, ph));
+  skipBtn.onclick = () => reveal(false);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); checkBtn.click(); } });
+  setTimeout(() => input.focus(), 100);
 }
 
 function renderDone(el) {
@@ -375,8 +491,7 @@ function goDay(id) {
   if (!isUnlocked(id)) return;
   S.currentDay = id;
   S.step = 'words';
-  S.exo1Index = 0;
-  S.exo1Queue = [];
+  S.exo1Queue = []; S.exo2Queue = []; S.exo3Queue = [];
   save();
   render();
 }

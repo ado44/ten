@@ -56,9 +56,10 @@ But : une app allégée, sans audio, installable et utilisable en mode avion.
 
 ### Sprint 2 — Exercices
 But : le parcours complet d'un jour (Mots → Lire → Retrouver → Écrire → Terminé).
-- [ ] Essai jetable : saisie au clavier arabe sur l'A15 et normalisation de la réponse
-- [ ] Exercice « Lire » (arabe → français) et exercice « Retrouver » (français → arabe), générés au hasard
-- [ ] Exercice « Écrire » au clavier arabe (`dir="rtl"`, `lang="ar"`), avec correction tolérante
+- [x] Essai jetable : saisie au clavier arabe sur l'A15 et normalisation de la réponse (page de test sur claude.ai, validée sur le téléphone)
+- [x] Exercice « Lire » (arabe → français) et exercice « Retrouver » (français → arabe), générés au hasard (une seule fonction QCM, 10 questions, 4 choix)
+- [x] Exercice « Écrire » au clavier arabe (`dir="rtl"`, `lang="ar"`), avec correction tolérante et le champ `accept` pour les variantes ; bouton « Voir la réponse »
+- [x] `sw.js` passé en `v2`
 - [ ] Démo : je termine un jour entier sur le téléphone
 
 ### Sprint 3 — Contenu fusha
