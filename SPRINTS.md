@@ -81,6 +81,7 @@ But : des vrais jours de contenu.
 - **Masculin par défaut** (la personne à qui on parle et moi qui parle), avec une note pour le féminin si besoin.
 - **Pas de futur au début** : le moment se dit avec des mots de temps (الْآنَ, بَعْدَ قَلِيلٍ, لَاحِقًا…).
 - **Une expression figée compte pour un mot** (ex. مَا مَعْنَى…؟).
+- **Naturel à l'oral** : chaque mot doit être employé par quelqu'un de fluent quand il parle fusha, pas seulement correct à l'écrit. Ce critère a fait remplacer آهِ par حَسَنًا et بَعْدُ par لَيْسَ بَعْدُ au jour 1.
 
 **Progression par semaine** (les 7 jours d'une semaine gardent le même niveau, seule la situation change) :
 
