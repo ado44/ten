@@ -1,5 +1,5 @@
 // Incrémenter VERSION à chaque publication pour que le téléphone récupère la nouvelle version.
-const VERSION = 'v3';
+const VERSION = 'v4';
 const CACHE = 'fusha-' + VERSION;
 const FILES = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
