@@ -130,9 +130,10 @@ But : comprendre directement le sens des mots des sourates que je connais par c�
 - Les mots déjà vus dans les jours fusha sont signalés comme connus. Pas d'audio.
 
 - [x] Sources vérifiées (licences) et alignées : 564 versets, 2 308 mots, mêmes lettres dans les trois sources
-- [ ] Essai jetable : affichage du rasm uthmani sur l'A15 (page de test sur claude.ai, trois polices)
-- [ ] Données : lemmes et sens (anglais quran.com → français, relus par moi), décomposition en préfixes
-- [ ] Import des données Coran dans l'app (fichier local, jamais publié) et écran Coran
+- [x] Essai jetable : affichage du rasm uthmani sur l'A15 → **Amiri Quran** retenue (embarquée dans `docs/fonts/`, licence OFL jointe), police du téléphone en option
+- [x] `tools/build-coran.js` : aligne les trois sources, vérifie chaque mot (2 303 / 2 308 identiques signe par signe ; les 5 autres sont la hamza ـَٔ écrite autrement) et écrit `ref/coran.json`
+- [ ] Sens français : 100 premiers mots + 17 préfixes + 10 pronoms faits ; **738 mots restants**, par lots, à relire par moi avec quran.com
+- [x] Écran Coran : import du fichier, séance de 20 éléments (Mots → Sens → Versets), décomposition au toucher, mots déjà vus en fusha reconnus (comparaison avec voyelles internes + exception pour les homographes)
 - [ ] Démo : je fais une séance de 20 mots sur le téléphone, hors ligne
 
 #### Sources du Coran

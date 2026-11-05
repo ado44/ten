@@ -94,6 +94,46 @@ body { font-family: system-ui, sans-serif; background: #0f0f0f; color: #e8e8e8; 
 .complete-box p { font-size: 14px; color: #555; margin-bottom: 24px; }
 .btn-complete { padding: 13px 28px; background: #0d1f0d; border: 1px solid #2d5a2d; color: #4a8a4a; border-radius: 10px; font-size: 15px; cursor: pointer; }
 .btn-complete:hover { background: #1a2a1a; }
+
+/* MODE FUSHA | CORAN */
+.mode-switch { display: flex; gap: 3px; padding: 3px; border: 1px solid #222; border-radius: 999px; margin-bottom: 16px; }
+.mode-switch button { flex: 1; min-height: 36px; border: none; border-radius: 999px; background: transparent; color: #666; font-size: 13px; cursor: pointer; }
+.mode-switch button.active { background: #0d1f2f; color: #4a90d9; }
+
+/* CORAN */
+@font-face { font-family: 'Amiri Quran App'; src: url('fonts/amiri-quran-arabic.woff2') format('woff2'); font-display: swap; }
+#app { --qfont: 'Amiri Quran App', 'Noto Naskh Arabic', serif; }
+#app[data-qfont="system"] { --qfont: system-ui, sans-serif; }
+.quran { font-family: var(--qfont); direction: rtl; line-height: 2.2; }
+.q-word-arabic { font-size: 30px; }
+.q-meta { font-size: 12px; color: #667; margin-top: 2px; }
+.q-meta .quran { font-size: 18px; line-height: 1.6; }
+.q-hint { font-size: 12px; color: #667; line-height: 1.5; margin-bottom: 12px; }
+.q-empty { font-size: 14px; color: #888; line-height: 1.6; padding: 24px 0; }
+.q-error { font-size: 13px; color: #d46a6a; margin-top: 8px; }
+.verse { direction: rtl; display: flex; flex-wrap: wrap; gap: 2px 8px; background: #141414; border-radius: 12px; padding: 12px 14px; margin-bottom: 12px; }
+.vw { font-family: var(--qfont); font-size: 28px; line-height: 2.1; background: transparent; border: none; border-bottom: 2px solid transparent; border-radius: 6px; color: #e8e8e8; padding: 0 3px; cursor: pointer; }
+.vw.new { color: #6fb0f0; border-bottom-color: #2a4a6a; }
+.vw.unknown { color: #6a6a6a; }
+.vw.selected { background: #1a2a3a; }
+.detail { display: flex; flex-direction: column; gap: 6px; background: #111; border: 1px solid #222; border-radius: 10px; padding: 10px 12px; margin-bottom: 12px; }
+.seg-row { display: flex; align-items: baseline; gap: 12px; }
+.seg-ar { font-family: var(--qfont); font-size: 24px; direction: rtl; min-width: 70px; text-align: right; }
+.seg-fr { flex: 1; font-size: 14px; color: #ccc; }
+.seg-kind { font-size: 11px; color: #667; }
+.seg-en { font-size: 12px; color: #667; border-top: 1px solid #1e1e1e; padding-top: 6px; }
+.badge { display: inline-block; font-size: 10px; padding: 1px 7px; border-radius: 999px; background: #1a1a1a; color: #777; margin-left: 8px; vertical-align: middle; }
+.badge.new { background: #0d1f2f; color: #4a90d9; }
+.badge.known, .badge.fusha { background: #0d1f0d; color: #4a8a4a; }
+.import-box { display: flex; flex-direction: column; gap: 12px; padding: 12px 0; }
+.import-box h1 { font-size: 17px; }
+.import-box p { font-size: 14px; color: #999; line-height: 1.6; }
+.file-btn { display: block; text-align: center; }
+.q-footer { display: flex; flex-direction: column; gap: 12px; margin-top: 32px; padding-top: 16px; border-top: 1px solid #1e1e1e; font-size: 12px; color: #666; line-height: 1.6; }
+.q-footer a { color: #4a90d9; }
+.font-toggle { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.font-toggle button { min-height: 34px; padding: 0 12px; border: 1px solid #2a2a2a; border-radius: 999px; background: #141414; color: #888; font-size: 12px; cursor: pointer; }
+.font-toggle button.active { border-color: #2a4a6a; background: #0d1f2f; color: #4a90d9; }
 </style>
 </head>
 <body>
@@ -208,6 +248,26 @@ S = S || {
   exo3Index: 0, exo3Queue: [],   // indices des phrases
 };
 function save() { try { localStorage.setItem(STORE_KEY, JSON.stringify(S)); } catch (e) {} }
+
+// Préférences communes : volet affiché et police du Coran.
+const PREFS_KEY = 'arabe_prefs_v1';
+let PREFS = null;
+try { PREFS = JSON.parse(localStorage.getItem(PREFS_KEY)); } catch (e) {}
+PREFS = Object.assign({ mode: 'fusha', qfont: 'amiri' }, PREFS);
+function savePrefs() { try { localStorage.setItem(PREFS_KEY, JSON.stringify(PREFS)); } catch (e) {} }
+
+function renderModeSwitch() {
+  const sw = document.createElement('div');
+  sw.className = 'mode-switch';
+  [['fusha', 'Fusha'], ['coran', 'Coran']].forEach(([mode, label]) => {
+    const b = document.createElement('button');
+    b.textContent = label;
+    if (PREFS.mode === mode) b.classList.add('active');
+    b.onclick = () => { PREFS.mode = mode; savePrefs(); render(); };
+    sw.appendChild(b);
+  });
+  return sw;
+}
 function day() { return DAYS.find(d => d.id === S.currentDay) || DAYS[0]; }
 function isUnlocked(id) { return id === 1 || S.completedDays.includes(id - 1); }
 // Isole les passages arabes d'un texte français pour que le sens de lecture reste juste.
@@ -227,6 +287,9 @@ function shuffle(arr) {
 function render() {
   const el = document.getElementById('app');
   el.innerHTML = '';
+  el.dataset.qfont = PREFS.qfont;
+  el.appendChild(renderModeSwitch());
+  if (PREFS.mode === 'coran') { renderCoran(el); return; }
   el.appendChild(renderHeader());
   el.appendChild(renderDayNav());
   el.appendChild(renderProgress());
@@ -371,37 +434,45 @@ function renderQcm(el, step) {
   if (S[step + 'Index'] >= queue.length) { q.next(); return; }
   const word = d.words[queue[S[step + 'Index']]];
   const others = shuffle(d.words.filter(w => w !== word)).slice(0, QCM_CHOICES - 1);
-  const options = shuffle([word, ...others]);
-  const advance = () => { S[step + 'Index']++; save(); render(); };
+  renderQuestion(el, {
+    counter: `${q.label} — ${S[step + 'Index'] + 1} / ${queue.length}`,
+    prompt: q.ask(word), promptClass: q.askAr ? 'ar' : '',
+    options: shuffle([word, ...others]), correct: word, answer: q.answer,
+    choiceClass: q.askAr ? '' : 'ar',
+    advance: () => { S[step + 'Index']++; save(); render(); },
+  });
+}
 
-  const counter = document.createElement('div');
-  counter.className = 'ex-counter';
-  counter.textContent = `${q.label} — ${S[step + 'Index'] + 1} / ${queue.length}`;
-  el.appendChild(counter);
+// Question à choix : commune aux QCM fusha et au QCM du Coran.
+function renderQuestion(el, { counter, prompt, promptClass, options, correct, answer, choiceClass, advance }) {
+  const c = document.createElement('div');
+  c.className = 'ex-counter';
+  c.textContent = counter;
+  el.appendChild(c);
 
-  const prompt = document.createElement('div');
-  prompt.className = q.askAr ? 'ex1-word ar' : 'ex1-word';
-  if (q.askAr) prompt.lang = 'ar';
-  prompt.textContent = q.ask(word);
-  el.appendChild(prompt);
+  const p = document.createElement('div');
+  p.className = 'ex1-word ' + promptClass;
+  if (promptClass) p.lang = 'ar';
+  p.textContent = prompt;
+  el.appendChild(p);
 
   const choices = document.createElement('div');
   choices.className = 'choices';
   options.forEach(o => {
     const btn = document.createElement('button');
-    btn.className = q.askAr ? 'choice-btn' : 'choice-btn ar';
-    if (!q.askAr) btn.lang = 'ar';
-    btn.textContent = q.answer(o);
+    btn.className = 'choice-btn ' + choiceClass;
+    if (choiceClass) btn.lang = 'ar';
+    btn.textContent = answer(o);
     btn.onclick = () => {
       if (btn.disabled) return;
       choices.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
-      if (o === word) {
+      if (o === correct) {
         btn.classList.add('correct');
         setTimeout(advance, 700);
       } else {
         btn.classList.add('wrong');
         choices.querySelectorAll('.choice-btn').forEach(b => {
-          if (b.textContent === q.answer(word)) b.classList.add('correct');
+          if (b.textContent === answer(correct)) b.classList.add('correct');
         });
         setTimeout(advance, 1200);
       }
@@ -520,6 +591,326 @@ function goDay(id) {
   S.exo1Queue = []; S.exo2Queue = []; S.exo3Queue = [];
   save();
   render();
+}
+
+// ── CORAN (sourates 78 à 114) ─────────────────────────────────────────────
+// Les données sont importées depuis un fichier (ref/coran.json, construit par tools/build-coran.js) :
+// elles restent dans le téléphone et ne sont jamais publiées avec l'app.
+const CORAN_DATA_KEY = 'coran_data_v1';
+const CORAN_STATE_KEY = 'coran_state_v1';
+const SESSION_SIZE = 20;
+const CORAN_QCM_COUNT = 10;
+const VERSES_PER_SESSION = 5;
+// Mots connus avant l'app (liste de SPRINTS.md, forme fusha) : ils comptent aussi comme connus ici.
+const KNOWN_WORDS = ['أَنَا', 'صَحِيحٌ', 'عَلَى', 'يَوْمٌ', 'نَاسٌ', 'رَجُلٌ', 'بِنْتٌ', 'بَلَدٌ', 'لَيْلَةٌ', 'ظُهْرٌ',
+  'نُقُودٌ', 'يَعْنِي', 'شُكْرًا', 'حَبِيبِي', 'نَعَمْ', 'لَا', 'هَيَّا', 'يَكْفِي'];
+
+let CD = null;
+try { CD = JSON.parse(localStorage.getItem(CORAN_DATA_KEY)); } catch (e) {}
+let C = null;
+try { C = JSON.parse(localStorage.getItem(CORAN_STATE_KEY)); } catch (e) {}
+C = C || { learned: [], session: [], step: 'words', qcmQueue: [], qcmIndex: 0, verseQueue: [], verseIndex: 0, sessionsDone: 0 };
+function saveCoran() { try { localStorage.setItem(CORAN_STATE_KEY, JSON.stringify(C)); } catch (e) {} }
+
+function mk(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text !== undefined) e.textContent = text;
+  return e;
+}
+
+// Index calculés une fois par jeu de données.
+let CX = null;
+function coranIndex() {
+  if (CX) return CX;
+  const fusha = new Set(KNOWN_WORDS.map(bareWord));
+  DAYS.forEach(d => d.words.forEach(w => { const b = bareWord(w.ar); if (b.length > 1 && !b.includes(' ')) fusha.add(b); }));
+  const items = new Map(CD.items.map(i => [i.id, i]));
+  const verses = new Map(CD.verses.map(v => [v.key, v]));
+  const example = new Map();
+  CD.verses.forEach(v => v.words.forEach(w => w.segs.forEach(s => {
+    if (s.id && !example.has(s.id)) example.set(s.id, { word: w.t, key: v.key });
+  })));
+  const fromFusha = new Set(CD.items.filter(i => i.kind === 'mot' && !NOT_FROM_FUSHA.includes(i.id.normalize('NFC')) &&fusha.has(bareWord(i.ar))).map(i => i.id));
+  return CX = { items, verses, example, fromFusha };
+}
+// Forme de comparaison avec un mot fusha : on garde les voyelles internes (sinon إِنَّ = الْآنَ, مَنْ = مِنْ)
+// et on retire l'article, la terminaison, le tanwîn, le soukoun et la chadda d'assimilation de la 1re lettre.
+function bareWord(s) {
+  return s.normalize('NFKC')
+    .replace(/[ٰۖ-ۭـًْ-ٍ]/g, '')
+    .replace(/[أإآٱ]/g, 'ا').replace(/ى/g, 'ي').replace(/ة/g, 'ه')
+    .replace(/[؟?….!،]/g, '').trim()
+    .replace(/^ال(?=..)/, '')
+    .replace(/^(.)([َ-ِ]?)ّ/, '$1$2')
+    .replace(/[َ-ّ]+$/, '');
+}
+// Homographes : même forme qu'un mot fusha connu, mais un autre mot (نَّعَم « bétail » ≠ نَعَمْ « oui »).
+const NOT_FROM_FUSHA = ['L:نَّعَم'].map(id => id.normalize('NFC'));
+function knownIds() { return new Set([...C.learned, ...coranIndex().fromFusha]); }
+// Part des mots du texte dont on connaît tous les morceaux (préfixes, mot, pronom).
+function coverage(ids) {
+  let k = 0, t = 0;
+  CD.verses.forEach(v => v.words.forEach(w => {
+    t++;
+    if (w.segs.every(s => !s.id || ids.has(s.id))) k++;
+  }));
+  return t ? Math.round(k / t * 100) : 0;
+}
+
+function startSession() {
+  const known = knownIds();
+  C.session = CD.items.filter(i => i.fr && !known.has(i.id)).slice(0, SESSION_SIZE).map(i => i.id);
+  C.step = 'words'; C.qcmQueue = []; C.qcmIndex = 0; C.verseQueue = []; C.verseIndex = 0;
+  saveCoran();
+}
+
+function renderCoran(root) {
+  if (!CD) { renderCoranImport(root); return; }
+  if (!C.session.length) startSession();
+  const known = knownIds();
+
+  const h = mk('div', 'header');
+  const left = mk('div');
+  left.append(mk('h1', '', 'Coran'), mk('p', '', `Sourates ${CD.surahs[0]} à ${CD.surahs[1]} · séance ${C.sessionsDone + (C.step === 'done' ? 0 : 1)}`));
+  h.append(left, mk('div', 'streak', `${known.size} mots · ${coverage(known)} % du texte`));
+  root.appendChild(h);
+
+  if (!C.session.length) {
+    root.appendChild(mk('p', 'q-empty', 'Toutes les séances disponibles sont faites. Les mots suivants arriveront avec la prochaine mise à jour du fichier coran.json.'));
+  } else {
+    root.appendChild(renderCoranTabs());
+    const content = mk('div');
+    if (C.step === 'words') renderCoranWords(content);
+    else if (C.step === 'qcm') renderCoranQcm(content);
+    else if (C.step === 'verses') renderCoranVerses(content);
+    else renderCoranDone(content);
+    root.appendChild(content);
+  }
+  root.appendChild(renderCoranFooter());
+}
+
+function renderCoranTabs() {
+  const steps = [['words', 'Mots'], ['qcm', 'Sens'], ['verses', 'Versets']];
+  const order = ['words', 'qcm', 'verses', 'done'];
+  const tabs = mk('div', 'step-tabs');
+  steps.forEach(([step, label]) => {
+    const t = mk('button', 'step-tab', label);
+    if (step === C.step) t.classList.add('active');
+    else if (order.indexOf(step) < order.indexOf(C.step)) {
+      t.classList.add('done-tab', 'reachable');
+      t.onclick = () => { if (step === 'qcm') return startCoranQcm(); if (step === 'verses') return startCoranVerses(); C.step = step; saveCoran(); render(); };
+    }
+    tabs.appendChild(t);
+  });
+  return tabs;
+}
+
+const KIND_LABEL = { prefixe: 'préfixe', suffixe: 'pronom collé', mot: '' };
+
+function renderCoranWords(root) {
+  const { items, example } = coranIndex();
+  root.appendChild(mk('div', 'section-label', `Mots de la séance (${C.session.length})`));
+  const list = mk('div', 'word-list');
+  C.session.forEach(id => {
+    const it = items.get(id), ex = example.get(id);
+    const row = mk('div', 'word-row');
+    const main = mk('div', 'word-main');
+    main.appendChild(mk('div', 'word-translation', it.fr));
+    const meta = mk('div', 'q-meta');
+    meta.append(`${KIND_LABEL[it.kind] ? KIND_LABEL[it.kind] + ' · ' : ''}${it.freq} fois · ex. `);
+    const exw = mk('bdi', 'quran', ex ? ex.word : '');
+    exw.lang = 'ar';
+    meta.append(exw, ex ? ` (${ex.key})` : '');
+    main.appendChild(meta);
+    const ar = mk('div', 'word-arabic q-word-arabic quran', it.ar);
+    ar.lang = 'ar';
+    row.append(main, ar);
+    list.appendChild(row);
+  });
+  root.appendChild(list);
+  const btn = mk('button', 'btn-next-step', 'Continuer → Sens');
+  btn.onclick = startCoranQcm;
+  root.appendChild(btn);
+}
+
+function startCoranQcm() {
+  C.qcmQueue = shuffle(C.session).slice(0, CORAN_QCM_COUNT);
+  C.qcmIndex = 0; C.step = 'qcm';
+  saveCoran(); render();
+}
+
+function renderCoranQcm(root) {
+  if (!C.qcmQueue.length) { startCoranQcm(); return; }
+  if (C.qcmIndex >= C.qcmQueue.length) { startCoranVerses(); return; }
+  const { items } = coranIndex();
+  const item = items.get(C.qcmQueue[C.qcmIndex]);
+  const pool = [...new Set([...C.session, ...C.learned])].map(id => items.get(id)).filter(i => i && i.fr && i.fr !== item.fr);
+  renderQuestion(root, {
+    counter: `Sens — ${C.qcmIndex + 1} / ${C.qcmQueue.length}`,
+    prompt: item.ar, promptClass: 'quran',
+    options: shuffle([item, ...shuffle(pool).slice(0, QCM_CHOICES - 1)]), correct: item, answer: o => o.fr,
+    choiceClass: '',
+    advance: () => { C.qcmIndex++; saveCoran(); render(); },
+  });
+}
+
+// Versets qui contiennent des mots de la séance, en privilégiant ceux dont on connaît le plus de mots.
+function startCoranVerses() {
+  const session = new Set(C.session), known = knownIds();
+  const scored = CD.verses.map(v => {
+    const ids = v.words.flatMap(w => w.segs.map(s => s.id).filter(Boolean));
+    if (!ids.some(id => session.has(id))) return null;
+    return { key: v.key, score: ids.filter(id => session.has(id) || known.has(id)).length / ids.length };
+  }).filter(Boolean).sort((a, b) => b.score - a.score);
+  C.verseQueue = shuffle(scored.slice(0, VERSES_PER_SESSION * 3)).slice(0, VERSES_PER_SESSION).map(s => s.key);
+  C.verseIndex = 0; C.step = 'verses';
+  saveCoran(); render();
+}
+
+function wordState(w, session, known) {
+  const ids = w.segs.map(s => s.id).filter(Boolean);
+  if (ids.some(id => session.has(id))) return 'new';
+  return ids.every(id => known.has(id)) ? 'known' : 'unknown';
+}
+
+function renderCoranVerses(root) {
+  if (!C.verseQueue.length) { startCoranVerses(); return; }
+  if (C.verseIndex >= C.verseQueue.length) { finishSession(); return; }
+  const { verses, items, fromFusha } = coranIndex();
+  const v = verses.get(C.verseQueue[C.verseIndex]);
+  const session = new Set(C.session), known = knownIds();
+
+  root.appendChild(mk('div', 'ex-counter', `Versets — ${C.verseIndex + 1} / ${C.verseQueue.length} · ${v.key}`));
+  root.appendChild(mk('p', 'q-hint', 'Touche un mot pour voir sa décomposition. En bleu : les mots de la séance ; en gris : ceux que tu ne connais pas encore.'));
+  const box = mk('div', 'verse');
+  box.lang = 'ar';
+  const detail = mk('div', 'detail');
+  detail.hidden = true;
+
+  v.words.forEach(w => {
+    const b = mk('button', 'vw ' + wordState(w, session, known), w.t);
+    b.onclick = () => {
+      box.querySelectorAll('.vw.selected').forEach(x => x.classList.remove('selected'));
+      b.classList.add('selected');
+      detail.innerHTML = '';
+      w.segs.forEach(s => {
+        const it = s.id && items.get(s.id);
+        const row = mk('div', 'seg-row');
+        const ar = mk('span', 'seg-ar', s.ar);
+        ar.lang = 'ar';
+        const fr = mk('span', 'seg-fr', it ? (it.fr || '—') : '—');
+        if (it) {
+          const status = fromFusha.has(it.id) ? ['vu en fusha', 'fusha'] : session.has(it.id) ? ['séance', 'new']
+            : C.learned.includes(it.id) ? ['appris', 'known'] : ['pas encore vu', ''];
+          fr.appendChild(mk('span', 'badge ' + status[1], status[0]));
+          if (KIND_LABEL[it.kind]) fr.appendChild(mk('span', 'seg-kind', ' ' + KIND_LABEL[it.kind]));
+        }
+        row.append(ar, fr);
+        detail.appendChild(row);
+      });
+      detail.appendChild(mk('div', 'seg-en', `Dans ce verset (anglais) : ${w.en}`));
+      detail.hidden = false;
+    };
+    box.appendChild(b);
+  });
+  root.append(box, detail);
+
+  const next = mk('button', 'btn-next-step', C.verseIndex + 1 < C.verseQueue.length ? 'Verset suivant →' : 'Terminer la séance →');
+  next.onclick = () => { C.verseIndex++; saveCoran(); render(); };
+  root.appendChild(next);
+}
+
+function finishSession() {
+  C.learned = [...new Set([...C.learned, ...C.session])];
+  C.sessionsDone++;
+  C.step = 'done';
+  saveCoran(); render();
+}
+
+function renderCoranDone(root) {
+  const known = knownIds();
+  const box = mk('div', 'complete-box');
+  box.append(mk('h2', '', 'Séance terminée !'),
+    mk('p', '', `Tu connais maintenant ${known.size} mots et morceaux de mots : ${coverage(known)} % des mots des sourates ${CD.surahs[0]} à ${CD.surahs[1]} n'ont plus aucune partie inconnue.`));
+  const btn = mk('button', 'btn-complete', 'Séance suivante →');
+  btn.onclick = () => { startSession(); render(); };
+  box.appendChild(btn);
+  root.appendChild(box);
+}
+
+function fileInput(label, onError) {
+  const wrap = mk('label', 'btn-check file-btn', label);
+  const input = mk('input');
+  input.type = 'file';
+  input.accept = '.json,application/json';
+  input.hidden = true;
+  input.onchange = () => input.files[0] && importCoran(input.files[0], onError);
+  wrap.appendChild(input);
+  return wrap;
+}
+
+function importCoran(file, onError) {
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const d = JSON.parse(reader.result);
+      if (d.format !== 'coran-v1' || !Array.isArray(d.items) || !Array.isArray(d.verses)) {
+        return onError("Ce fichier n'est pas un fichier coran.json produit par l'outil du projet.");
+      }
+      localStorage.setItem(CORAN_DATA_KEY, JSON.stringify(d));
+      CD = d; CX = null;
+      // Les mots appris restent appris ; la séance en cours est recalculée avec les nouvelles données.
+      C.session = []; saveCoran();
+      render();
+    } catch (e) {
+      onError(`Import impossible : ${e.message}`);
+    }
+  };
+  reader.onerror = () => onError('Lecture du fichier impossible.');
+  reader.readAsText(file);
+}
+
+function renderCoranImport(root) {
+  const box = mk('div', 'import-box');
+  box.append(mk('h1', '', 'Coran'),
+    mk('p', '', "Pour commencer, importe le fichier coran.json. Il contient le texte des sourates 78 à 114, la décomposition et le sens des mots. Il reste dans ce téléphone : il n'est jamais publié avec l'app."),
+    mk('p', 'q-hint', 'Envoie-toi le fichier (e-mail, Drive…), enregistre-le dans Téléchargements, puis choisis-le ici.'));
+  const err = mk('p', 'q-error');
+  err.hidden = true;
+  box.append(fileInput('Choisir le fichier coran.json', msg => { err.textContent = msg; err.hidden = false; }), err);
+  root.appendChild(box);
+}
+
+function renderCoranFooter() {
+  const f = mk('div', 'q-footer');
+  const fonts = mk('div', 'font-toggle');
+  fonts.appendChild(mk('span', '', 'Police :'));
+  [['amiri', 'Amiri Quran'], ['system', 'Police du téléphone']].forEach(([k, label]) => {
+    const b = mk('button', PREFS.qfont === k ? 'active' : '', label);
+    b.onclick = () => { PREFS.qfont = k; savePrefs(); render(); };
+    fonts.appendChild(b);
+  });
+  f.appendChild(fonts);
+  const err = mk('p', 'q-error');
+  err.hidden = true;
+  f.append(fileInput('Remplacer le fichier coran.json', msg => { err.textContent = msg; err.hidden = false; }), err);
+  const src = mk('div', 'q-sources');
+  src.appendChild(mk('div', '', `Données du ${CD.built} :`));
+  CD.sources.forEach(s => {
+    const line = mk('div');
+    const a = mk('a', '', s.name);
+    a.href = s.url; a.target = '_blank'; a.rel = 'noopener';
+    line.append(a, ` — ${s.license}`);
+    src.appendChild(line);
+  });
+  const font = mk('div');
+  const fa = mk('a', '', 'Amiri Quran');
+  fa.href = 'fonts/OFL-amiri-quran.txt'; fa.target = '_blank';
+  font.append('Police ', fa, ' — SIL Open Font License 1.1');
+  src.appendChild(font);
+  f.appendChild(src);
+  return f;
 }
 
 render();
