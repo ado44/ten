@@ -57,13 +57,18 @@ const PREFIX_GROUP = { 'w:REM+': 'w:CONJ+', 'f:REM+': 'f:CONJ+' };
 const PRONOUNS = {
 // Le corpus range sous le même pronom le complément (رَبُّهُمْ « leur Seigneur ») et le sujet d'un verbe
 // (يَتَسَاءَلُونَ « ils s'interrogent ») : le sens donné couvre les deux.
-  '1S': { ar: 'ـِي / ـنِي', fr: 'je, moi, mon' }, '1P': { ar: 'ـنَا', fr: 'nous, notre' },
+  '1S': { ar: 'ـِي / ـنِي', fr: 'je, moi, mon' },
+  '1P': { ar: 'ـنَا', fr: 'Nous, Notre : le « Nous » de majesté quand Allah parle de Lui-même (pas un « nous » ordinaire) · parfois nous, notre' },
   '2MS': { ar: 'ـكَ', fr: 'tu, toi, ton' }, '2FS': { ar: 'ـكِ', fr: 'tu, toi, ton (fém.)' },
   '2MP': { ar: 'ـكُمْ', fr: 'vous, votre' }, '2D': { ar: 'ـكُمَا', fr: 'vous deux' },
   '3MS': { ar: 'ـهُ', fr: 'il, lui, son' }, '3FS': { ar: 'ـهَا', fr: 'elle, sa' },
   '3MP': { ar: 'ـهُمْ', fr: 'ils, eux, leur' }, '3FP': { ar: 'ـهُنَّ', fr: 'elles, leur' },
   '3D': { ar: 'ـهُمَا', fr: 'eux deux' },
 };
+
+// « Nous » de majesté : repéré par la majuscule du sens anglais (We, Our, Us). Ces mots-là sont Allah
+// qui parle, mais leur sens anglais ne contient pas le pronom ; vérifiés un par un.
+const ROYAL_WITHOUT_WE = ['90:10:1', '97:1:2'];
 
 // ── Lecture des sources ─────────────────────────────────────────────────────
 const tanzil = {};
@@ -125,6 +130,7 @@ for (const vkey of Object.keys(qcom)) {
         const pron = p.features.find(f => f.startsWith('PRON:'));
         const k = pron && pron.slice(5);
         if (k && PRONOUNS[k]) { id = 'S:' + k; item(id, { kind: 'suffixe', ar: PRONOUNS[k].ar, fr: PRONOUNS[k].fr }); }
+        if (k === '1P') seg.royal = /\b(We|Our|Us)\b/.test(w.translation.text) || ROYAL_WITHOUT_WE.includes(`${vkey}:${i + 1}`);
       } else {
         const lem = p.features.find(f => f.startsWith('LEM:'));
         const root = p.features.find(f => f.startsWith('ROOT:'));
