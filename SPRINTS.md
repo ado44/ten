@@ -122,6 +122,30 @@ Ils viennent de la liste de l'ancien `ret.txt`, sans « Tayeb », retiré par mo
 
 À ne pas confondre : الْيَوْمَ « aujourd'hui » est un mot nouveau, même s'il vient de يَوْمٌ « jour ».
 
+### Sprint 4 — Volet Coran (sourates 78 à 114)
+But : comprendre directement le sens des mots des sourates que je connais par cœur. Je connais déjà le sens des versets, mais pas celui de chaque mot.
+- Section à part dans l'app (sélecteur **Fusha | Coran**), avec sa propre progression et sa propre sauvegarde. Les sprints fusha (jours 3 à 7) sont en pause.
+- **Séances de 20 lemmes**, classés par fréquence dans les sourates 78 à 114, avec des versets tirés au hasard (pas d'ordre de sourate : c'est de la compréhension, pas du par cœur).
+- Toucher un mot affiche sa **décomposition** (préfixes وَ, فَ, بِ, لِ, الْ… + mot + suffixe). Les préfixes s'apprennent une seule fois, comme des mots.
+- Les mots déjà vus dans les jours fusha sont signalés comme connus. Pas d'audio.
+
+- [x] Sources vérifiées (licences) et alignées : 564 versets, 2 308 mots, mêmes lettres dans les trois sources
+- [ ] Essai jetable : affichage du rasm uthmani sur l'A15 (page de test sur claude.ai, trois polices)
+- [ ] Données : lemmes et sens (anglais quran.com → français, relus par moi), décomposition en préfixes
+- [ ] Import des données Coran dans l'app (fichier local, jamais publié) et écran Coran
+- [ ] Démo : je fais une séance de 20 mots sur le téléphone, hors ligne
+
+#### Sources du Coran
+| Source | Usage | Licence | Où |
+|---|---|---|---|
+| Tanzil (Uthmani 1.1) | texte affiché | CC BY 3.0 : texte non modifié, source citée avec un lien | `ref/quran-uthmani.txt` |
+| Quranic Arabic Corpus 0.4 | lemmes, racines, préfixes | GNU : fichier non modifié, source citée avec un lien | `ref/quranic-corpus-morphology-0.4.txt` |
+| quran.com (API v4) | sens des mots en anglais | usage personnel uniquement : **jamais publié** | `ref/quran-com/` (requêtes lancées par moi) |
+
+- `ref/` est dans `.gitignore`. Les données dérivées de quran.com ne vont **jamais** dans `docs/` ni sur GitHub : elles arrivent sur le téléphone par un fichier importé dans l'app.
+- Le fichier Tanzil met la basmala dans le verset 1 de chaque sourate, contrairement aux deux autres sources : on la retire avant d'aligner.
+- Chiffres : 839 lemmes au total ; les 20 premiers couvrent 30 % des mots, les 100 premiers 55 %, les 300 premiers 76 %.
+
 ## Rétros
 
 ### Sprint 1 — 2026-11-03
