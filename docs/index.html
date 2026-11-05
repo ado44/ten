@@ -707,6 +707,9 @@ function renderCoranTabs() {
 }
 
 const KIND_LABEL = { prefixe: 'préfixe', suffixe: 'pronom collé', mot: '' };
+// Sens de ـنَا selon l'emploi, repéré par l'outil de construction (seg.royal).
+const NOUS_MAJESTE = 'Nous, Notre : « Nous » de majesté, Allah parle de Lui-même (pas un « nous » ordinaire)';
+const NOUS_COMMUN = 'nous, notre : « nous » ordinaire, ce sont des hommes qui parlent';
 
 function renderCoranWords(root) {
   const { items, example } = coranIndex();
@@ -799,7 +802,7 @@ function renderCoranVerses(root) {
         const row = mk('div', 'seg-row');
         const ar = mk('span', 'seg-ar', s.ar);
         ar.lang = 'ar';
-        const fr = mk('span', 'seg-fr', it ? (it.fr || '—') : '—');
+        const fr = mk('span', 'seg-fr', s.royal === true ? NOUS_MAJESTE : s.royal === false ? NOUS_COMMUN : it ? (it.fr || '—') : '—');
         if (it) {
           const status = fromFusha.has(it.id) ? ['vu en fusha', 'fusha'] : session.has(it.id) ? ['séance', 'new']
             : C.learned.includes(it.id) ? ['appris', 'known'] : ['pas encore vu', ''];
