@@ -161,7 +161,8 @@ But : prendre l'habitude de lire, puis lire sans voyelles. Les voyelles disparai
 - **Thèmes : les grandes villes du Moyen-Orient**, une par leçon.
 - [x] Leçon 2 : « L'histoire de Jérusalem » (40 lignes, 279 mots ; récit factuel, neutre sur la période moderne)
 - [x] Leçon 3 : « Damas » (40 lignes, 266 mots)
-- [ ] Leçon 4 (le complément, -a/-an) : prochaine ville à choisir (Bagdad, Le Caire, La Mecque, Istanbul…)
+- [x] Leçon 4 : « Bagdad », règle du complément (-a/-an) (45 lignes, 326 mots ; textes rallongés quand le sujet le demande)
+- [ ] Leçon 5 (le verbe au présent, -u) : prochaine ville à choisir (Le Caire, La Mecque, Médine, Istanbul, Beyrouth…)
 - [ ] Leçons suivantes : le complément (-a/-an), le verbe au présent (-u) ; les textes 1 à 3 sont déjà annotés pour ces règles
 - [ ] Démo : je lis les 3 textes sur le téléphone
 
