@@ -1,5 +1,5 @@
 // Incrémenter VERSION à chaque publication pour que le téléphone récupère la nouvelle version.
-const VERSION = 'v7';
+const VERSION = 'v8';
 const CACHE = 'fusha-' + VERSION;
 const FILES = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png',
   './fonts/amiri-quran-arabic.woff2', './fonts/OFL-amiri-quran.txt'];

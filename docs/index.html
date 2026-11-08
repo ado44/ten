@@ -10,6 +10,7 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
+[hidden] { display: none !important; }
 body { font-family: system-ui, sans-serif; background: #0f0f0f; color: #e8e8e8; min-height: 100vh; }
 #app { max-width: 520px; margin: 0 auto; padding: 16px 16px 60px; }
 .ar { font-family: 'Noto Naskh Arabic', 'Traditional Arabic', 'Segoe UI', serif; direction: rtl; line-height: 1.9; }
@@ -134,6 +135,19 @@ body { font-family: system-ui, sans-serif; background: #0f0f0f; color: #e8e8e8; 
 .font-toggle { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .font-toggle button { min-height: 34px; padding: 0 12px; border: 1px solid #2a2a2a; border-radius: 999px; background: #141414; color: #888; font-size: 12px; cursor: pointer; }
 .font-toggle button.active { border-color: #2a4a6a; background: #0d1f2f; color: #4a90d9; }
+
+/* LECTURE */
+.rule-card { background: #141414; border-radius: 12px; padding: 14px; margin-bottom: 16px; display: flex; flex-direction: column; gap: 8px; }
+.rule-title { font-size: 14px; font-weight: 600; color: #4a90d9; }
+.rule-text { font-size: 14px; color: #bbb; line-height: 1.7; }
+.rule-ex { font-size: 22px; color: #e8e8e8; text-align: right; }
+.reading { background: #141414; border-radius: 12px; padding: 12px 14px; margin-bottom: 12px; text-align: right; }
+.reading-line { font-size: 24px; line-height: 2.2; color: #e8e8e8; margin-bottom: 6px; }
+.rule-text bdi { font-size: 20px; }
+.rw-wrap { white-space: nowrap; }
+.rw { font: inherit; color: inherit; background: transparent; border: none; border-radius: 6px; padding: 0 1px; cursor: pointer; }
+.rw.selected { background: #1a2a3a; }
+.rw-full { font-size: 30px; text-align: right; }
 </style>
 </head>
 <body>
@@ -259,7 +273,7 @@ function savePrefs() { try { localStorage.setItem(PREFS_KEY, JSON.stringify(PREF
 function renderModeSwitch() {
   const sw = document.createElement('div');
   sw.className = 'mode-switch';
-  [['fusha', 'Fusha'], ['coran', 'Coran']].forEach(([mode, label]) => {
+  [['fusha', 'Fusha'], ['coran', 'Coran'], ['lecture', 'Lecture']].forEach(([mode, label]) => {
     const b = document.createElement('button');
     b.textContent = label;
     if (PREFS.mode === mode) b.classList.add('active');
@@ -290,6 +304,7 @@ function render() {
   el.dataset.qfont = PREFS.qfont;
   el.appendChild(renderModeSwitch());
   if (PREFS.mode === 'coran') { renderCoran(el); return; }
+  if (PREFS.mode === 'lecture') { renderLecture(el); return; }
   el.appendChild(renderHeader());
   el.appendChild(renderDayNav());
   el.appendChild(renderProgress());
@@ -621,10 +636,18 @@ function mk(tag, cls, text) {
 
 // Index calculés une fois par jeu de données.
 let CX = null;
+// Mots déjà connus côté fusha (liste de départ + jours), sous la forme bareWord. Partagé par Coran et Lecture.
+let FUSHA_SET = null;
+function fushaKnownSet() {
+  if (FUSHA_SET) return FUSHA_SET;
+  FUSHA_SET = new Set(KNOWN_WORDS.map(bareWord));
+  DAYS.forEach(d => d.words.forEach(w => { const b = bareWord(w.ar); if (b.length > 1 && !b.includes(' ')) FUSHA_SET.add(b); }));
+  return FUSHA_SET;
+}
+
 function coranIndex() {
   if (CX) return CX;
-  const fusha = new Set(KNOWN_WORDS.map(bareWord));
-  DAYS.forEach(d => d.words.forEach(w => { const b = bareWord(w.ar); if (b.length > 1 && !b.includes(' ')) fusha.add(b); }));
+  const fusha = fushaKnownSet();
   const items = new Map(CD.items.map(i => [i.id, i]));
   const verses = new Map(CD.verses.map(v => [v.key, v]));
   const example = new Map();
@@ -914,6 +937,162 @@ function renderCoranFooter() {
   src.appendChild(font);
   f.appendChild(src);
   return f;
+}
+
+// ── LECTURE ───────────────────────────────────────────────────────────────
+// Une leçon = une règle de terminaison + un texte. Chaque mot porte « #n » : la règle qui fixe sa voyelle
+// finale. Une fois la règle vue, cette voyelle disparaît ; les mots déjà vus en fusha perdent aussi
+// leurs voyelles internes. Mot sans « #n » : terminaison fixe ou pas encore étudiée.
+const RULES = {
+  1: { title: 'Après une préposition : -i / -in',
+       text: "Après فِي, مِنْ, إِلَى, عَلَى, عَنْ et les préfixes بِـ, لِـ, كَـ, le nom finit par ـِ (avec الْـ) ou ـٍ (sans الْـ). L'adjectif qui le suit prend la même terminaison.",
+       ex: ['فِي الْبَيْتِ', 'فِي شَقَّةٍ صَغِيرَةٍ', 'بِالْحَافِلَةِ'] },
+  2: { title: 'Le complément du nom : -i / -in',
+       text: "Dans « X de Y », le 2e nom finit par ـِ ou ـٍ. Le 1er nom n'a jamais الْـ ni tanwîn. C'est pareil après مَعَ, عِنْدَ, قَبْلَ, بَعْدَ, قُرْبَ, qui sont en fait des noms.",
+       ex: ['ثَلَّاجَةُ الْبَيْتِ', 'زُجَاجَةُ مَاءٍ', 'بَعْدَ الدَّرْسِ'] },
+  3: { title: 'Le sujet et ce qu\'on en dit : -u / -un',
+       text: "Le mot qui ouvre une phrase sans verbe, ce qu'on dit de lui, et le sujet d'un verbe finissent par ـُ ou ـٌ.",
+       ex: ['اللُّغَةُ جَمِيلَةٌ', 'الثَّلَّاجَةُ فَارِغَةٌ'] },
+  4: { title: 'Le complément : -a / -an', text: '', ex: [] },
+  5: { title: 'Le verbe au présent : -u', text: '', ex: [] },
+};
+const LESSONS = [
+  { n: 1, title: 'Ma journée', lines: [
+    'أَسْكُنُ#5 فِي شَقَّةٍ#1 صَغِيرَةٍ#1 قُرْبَ#4 الْجَامِعَةِ#2.',
+    'فِي الصَّبَاحِ#1 أَذْهَبُ#5 إِلَى الْجَامِعَةِ#1 بِالْحَافِلَةِ#1.',
+    'أَدْرُسُ#5 اللُّغَةَ#4 الْعَرَبِيَّةَ#4 فِي قَاعَةٍ#1 كَبِيرَةٍ#1.',
+    'بَعْدَ#4 الدَّرْسِ#2 أَجْلِسُ#5 فِي الْمَكْتَبَةِ#1 سَاعَةً#4 أَوْ سَاعَتَيْنِ.',
+    'فِي الْمَسَاءِ#1 أَرْجِعُ#5 إِلَى الْبَيْتِ#1 وَأَطْبُخُ#5 لِأَصْدِقَائِي.',
+    'ثُمَّ أَتَكَلَّمُ#5 مَعَ#4 أُمِّي عَلَى الْهَاتِفِ#1 قَبْلَ#4 النَّوْمِ#2.',
+  ] },
+  { n: 2, title: 'Le frigo des colocs', lines: [
+    'ثَلَّاجَةُ#3 الْبَيْتِ#2 فَارِغَةٌ#3 الْيَوْمَ#4.',
+    'لَا يُوجَدُ#5 فِيهَا إِلَّا عُلْبَةُ#3 حَلِيبٍ#2 وَقِطْعَةُ#3 جُبْنٍ#2.',
+    'قَالَ صَدِيقِي: «أَنَا جَائِعٌ#3 جِدًّا#4!»',
+    'فَذَهَبْنَا إِلَى سُوقِ#1 الْحَيِّ#2، وَاشْتَرَيْنَا خُبْزًا#4 وَبَيْضًا#4 وَزُجَاجَةَ#4 مَاءٍ#2.',
+    'وَفِي طَرِيقِ#1 الْعَوْدَةِ#2 أَكَلْنَا قِطْعَةَ#4 كَعْكٍ#2 مِنْ مَخْبَزِ#1 الْحَيِّ#2.',
+    'وَفِي الْمَسَاءِ#1 طَبَخْنَا عَشَاءً#4 لَذِيذًا#4 مَعًا.',
+  ] },
+  { n: 3, title: 'Mon niveau en arabe', lines: [
+    'اللُّغَةُ#3 الْعَرَبِيَّةُ#3 جَمِيلَةٌ#3، لَكِنَّهَا صَعْبَةٌ#3 قَلِيلًا#4.',
+    'مُسْتَوَايَ مُتَوَسِّطٌ#3: أَفْهَمُ#5 الْكَلَامَ#4 الْبَسِيطَ#4، لَكِنَّ الْقَوَاعِدَ#4 صَعْبَةٌ#3.',
+    'أُسْتَاذُنَا صَبُورٌ#3 جِدًّا#4، وَزُمَلَائِي لَطِيفُونَ.',
+    'كُلَّ#4 يَوْمٍ#2 أَقْرَأُ#5 صَفْحَةً#4 مِنْ كِتَابٍ#1 بَسِيطٍ#1.',
+    'الْقِرَاءَةُ#3 مُفِيدَةٌ#3، وَالْمُحَادَثَةُ#3 أَهَمُّ#3.',
+    'لِذَلِكَ أَتَكَلَّمُ#5 مَعَ#4 أَصْدِقَائِي بِالْفُصْحَى كُلَّ#4 مَسَاءٍ#2.',
+  ] },
+];
+
+const LECTURE_KEY = 'lecture_state_v1';
+let L = null;
+try { L = JSON.parse(localStorage.getItem(LECTURE_KEY)); } catch (e) {}
+L = L || { lesson: 1, done: [] };
+function saveLecture() { try { localStorage.setItem(LECTURE_KEY, JSON.stringify(L)); } catch (e) {} }
+
+const HARAKAT = /[ً-ْ]/g;
+// Sépare un mot de ses signes finaux (ـًا : le tanwîn est sur la lettre avant l'alif).
+function splitFinal(word) {
+  const m = word.match(/^(.*?)([ً-ْ]*)(ا?)$/);
+  if (m[3] && !m[2].includes('ً')) {
+    const n = word.match(/^(.*?)([ً-ْ]*)$/);
+    return [n[1], n[2], ''];
+  }
+  return [m[1], m[2], m[3]];
+}
+// Un jeton du texte : « «mot#n» » avec ponctuation éventuelle avant et après.
+function parseToken(tok) {
+  const m = tok.match(/^([«]*)(.+?)(?:#(\d))?([.،:!؟»]*)$/);
+  return { pre: m[1], word: m[2], rule: m[3] ? +m[3] : 0, post: m[4] };
+}
+// Forme affichée selon la leçon : terminaison retirée si sa règle est vue, voyelles internes retirées si le mot est connu.
+function displayWord(t, level) {
+  const known = fushaKnownSet().has(bareWord(t.word));
+  let [base, fin, alif] = splitFinal(t.word);
+  // 1. Mot connu : voyelles internes et chadda retirées.
+  if (known) { base = base.replace(HARAKAT, ''); fin = fin.replace(/ّ/g, ''); }
+  // 2. Mot connu sans règle de terminaison : plus aucune voyelle.
+  if (known && !t.rule) fin = '';
+  // 3. Règle déjà vue : la terminaison disparaît, la chadda (qui appartient au mot) reste.
+  if (t.rule && t.rule <= level) fin = fin.replace(/[^ّ]/g, '');
+  return base + fin + alif;
+}
+
+function renderLecture(root) {
+  const lesson = LESSONS.find(l => l.n === L.lesson) || LESSONS[0];
+  const rule = RULES[lesson.n];
+
+  const h = mk('div', 'header');
+  const left = mk('div');
+  left.append(mk('h1', '', 'Lecture'), mk('p', '', `Leçon ${lesson.n} — ${lesson.title}`));
+  h.appendChild(left);
+  root.appendChild(h);
+
+  const nav = mk('div', 'day-nav');
+  LESSONS.forEach(l => {
+    const b = mk('button', 'day-btn', String(l.n));
+    const open = l.n === 1 || L.done.includes(l.n - 1);
+    if (L.done.includes(l.n)) b.classList.add('done');
+    else if (l.n === lesson.n) b.classList.add('active');
+    if (open) { b.classList.add('unlocked'); b.onclick = () => { L.lesson = l.n; saveLecture(); render(); }; }
+    nav.appendChild(b);
+  });
+  root.appendChild(nav);
+
+  const card = mk('div', 'rule-card');
+  card.append(mk('div', 'rule-title', `Règle ${lesson.n} · ${rule.title}`));
+  const p = mk('p', 'rule-text');
+  p.innerHTML = arInline(rule.text);
+  card.appendChild(p);
+  const ex = mk('div', 'rule-ex ar', rule.ex.join('  ·  '));
+  ex.lang = 'ar';
+  card.appendChild(ex);
+  card.appendChild(mk('p', 'q-hint', 'Dans le texte, les terminaisons des règles vues sont retirées, ainsi que les voyelles internes des mots déjà appris en fusha. Touche un mot pour vérifier.'));
+  root.appendChild(card);
+
+  const box = mk('div', 'reading ar');
+  box.lang = 'ar';
+  const detail = mk('div', 'detail');
+  detail.hidden = true;
+  lesson.lines.forEach(line => {
+    const row = mk('p', 'reading-line');
+    line.split(' ').forEach((tok, i) => {
+      const t = parseToken(tok);
+      if (i) row.append(' ');
+      // Le mot et sa ponctuation restent sur la même ligne.
+      const wrap = mk('span', 'rw-wrap');
+      if (t.pre) wrap.append(t.pre);
+      const b = mk('button', 'rw', displayWord(t, lesson.n));
+      b.onclick = () => {
+        box.querySelectorAll('.rw.selected').forEach(x => x.classList.remove('selected'));
+        b.classList.add('selected');
+        detail.innerHTML = '';
+        const full = mk('div', 'rw-full ar', t.word);
+        full.lang = 'ar';
+        detail.appendChild(full);
+        const why = t.rule
+          ? `Terminaison : règle ${t.rule} · ${RULES[t.rule].title}${t.rule > lesson.n ? ' (leçon à venir)' : ''}`
+          : 'Pas de règle de terminaison ici : forme fixe, ou pas encore étudiée.';
+        detail.appendChild(mk('div', 'seg-fr', why));
+        if (fushaKnownSet().has(bareWord(t.word))) detail.appendChild(mk('div', 'seg-kind', 'Mot déjà vu en fusha : voyelles internes retirées.'));
+        detail.hidden = false;
+      };
+      wrap.appendChild(b);
+      if (t.post) wrap.append(t.post);
+      row.appendChild(wrap);
+    });
+    box.appendChild(row);
+  });
+  root.append(box, detail);
+
+  const next = LESSONS.find(l => l.n === lesson.n + 1);
+  const btn = mk('button', 'btn-next-step', next ? `J'ai lu le texte → leçon ${next.n}` : "J'ai lu le texte");
+  btn.onclick = () => {
+    if (!L.done.includes(lesson.n)) L.done.push(lesson.n);
+    if (next) L.lesson = next.n;
+    saveLecture(); render();
+  };
+  root.appendChild(btn);
+  if (!next && L.done.includes(lesson.n)) root.appendChild(mk('p', 'q-empty', 'Les prochaines leçons arrivent bientôt : le complément (-a / -an), puis le verbe au présent (-u).'));
 }
 
 render();

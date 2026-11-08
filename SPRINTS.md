@@ -132,7 +132,9 @@ But : comprendre directement le sens des mots des sourates que je connais par c�
 - [x] Sources vérifiées (licences) et alignées : 564 versets, 2 308 mots, mêmes lettres dans les trois sources
 - [x] Essai jetable : affichage du rasm uthmani sur l'A15 → **Amiri Quran** retenue (embarquée dans `docs/fonts/`, licence OFL jointe), police du téléphone en option
 - [x] `tools/build-coran.js` : aligne les trois sources, vérifie chaque mot (2 303 / 2 308 identiques signe par signe ; les 5 autres sont la hamza ـَٔ écrite autrement) et écrit `ref/coran.json`
-- [ ] Sens français : 100 premiers mots + 17 préfixes + 10 pronoms faits ; **738 mots restants**, par lots, à relire par moi avec quran.com
+- [ ] Sens français : 200 premiers mots + 17 préfixes + 10 pronoms faits (≈ 12 séances, 68 % des mots du texte entièrement compris) ; **638 mots restants**, en pause : je teste d'abord quelques jours. À relire par moi avec quran.com, en priorité قَدْر, أُمّ, قَتَلَ, حَقَّ, أَغْنَتْ, حُطَمَة, تَلَى.
+- [x] « Nous » de majesté : ـنَا est marqué emploi par emploi (30 fois Allah, 2 fois un « nous » ordinaire en 79:10-11)
+- Pour mettre à jour les sens sur le téléphone : `node tools/build-coran.js`, puis renvoyer `ref/coran.json` et « Remplacer le fichier coran.json » dans l'app (les mots appris restent appris).
 - [x] Écran Coran : import du fichier, séance de 20 éléments (Mots → Sens → Versets), décomposition au toucher, mots déjà vus en fusha reconnus (comparaison avec voyelles internes + exception pour les homographes)
 - [ ] Démo : je fais une séance de 20 mots sur le téléphone, hors ligne
 
@@ -146,6 +148,16 @@ But : comprendre directement le sens des mots des sourates que je connais par c�
 - `ref/` est dans `.gitignore`. Les données dérivées de quran.com ne vont **jamais** dans `docs/` ni sur GitHub : elles arrivent sur le téléphone par un fichier importé dans l'app.
 - Le fichier Tanzil met la basmala dans le verset 1 de chaque sourate, contrairement aux deux autres sources : on la retire avant d'aligner.
 - Chiffres : 839 lemmes au total ; les 20 premiers couvrent 30 % des mots, les 100 premiers 55 %, les 300 premiers 76 %.
+
+### Sprint 5 — Volet Lecture
+But : prendre l'habitude de lire, puis lire sans voyelles. Les voyelles disparaissent au fur et à mesure que j'apprends la règle ou le mot qui permet de les deviner.
+- **Une leçon = une règle de terminaison + un texte de plusieurs lignes** (écrit par Claude, avec aussi des mots pas encore vus).
+- Chaque mot du texte est annoté `#n` (la règle qui fixe sa voyelle finale). Les terminaisons des règles vues disparaissent. Les mots déjà appris en fusha perdent leurs voyelles internes. La chadda reste tant que le mot n'est pas connu.
+- Toucher un mot affiche sa forme complète et la règle de sa terminaison. Pas d'exercice pour l'instant.
+
+- [x] Leçons 1 à 3 : après une préposition (-i/-in), complément du nom (-i/-in, et après مَعَ, بَعْدَ, قَبْلَ…), sujet et attribut (-u/-un)
+- [ ] Leçons suivantes : le complément (-a/-an), le verbe au présent (-u) ; les textes 1 à 3 sont déjà annotés pour ces règles
+- [ ] Démo : je lis les 3 textes sur le téléphone
 
 ## Rétros
 
