@@ -158,7 +158,10 @@ But : prendre l'habitude de lire, puis lire sans voyelles. Les voyelles disparai
 - [x] Leçons 1 à 3 : après une préposition (-i/-in), complément du nom (-i/-in, et après مَعَ, بَعْدَ, قَبْلَ…), sujet et attribut (-u/-un)
 - **Un seul texte par leçon, long (~40 lignes)**, sur un thème choisi par moi (histoire, etc.). **Une leçon par jour** : la suivante s'ouvre le lendemain du jour où j'ai terminé la précédente.
 - [x] Leçon 1 : « L'histoire de Rome », 40 lignes, 298 mots (progression Lecture remise à zéro : clé `lecture_state_v2`)
-- [ ] Leçons 2 et 3 : textes encore courts, à remplacer par un texte long sur un thème à choisir (idée : l'histoire de Jérusalem)
+- **Thèmes : les grandes villes du Moyen-Orient**, une par leçon.
+- [x] Leçon 2 : « L'histoire de Jérusalem » (40 lignes, 279 mots ; récit factuel, neutre sur la période moderne)
+- [x] Leçon 3 : « Damas » (40 lignes, 266 mots)
+- [ ] Leçon 4 (le complément, -a/-an) : prochaine ville à choisir (Bagdad, Le Caire, La Mecque, Istanbul…)
 - [ ] Leçons suivantes : le complément (-a/-an), le verbe au présent (-u) ; les textes 1 à 3 sont déjà annotés pour ces règles
 - [ ] Démo : je lis les 3 textes sur le téléphone
 
