@@ -149,6 +149,16 @@ But : comprendre directement le sens des mots des sourates que je connais par c�
 - Le fichier Tanzil met la basmala dans le verset 1 de chaque sourate, contrairement aux deux autres sources : on la retire avant d'aligner.
 - Chiffres : 839 lemmes au total ; les 20 premiers couvrent 30 % des mots, les 100 premiers 55 %, les 300 premiers 76 %.
 
+### Sprint 5 — Volet Lecture
+But : prendre l'habitude de lire, puis lire sans voyelles. Les voyelles disparaissent au fur et à mesure que j'apprends la règle ou le mot qui permet de les deviner.
+- **Une leçon = une règle de terminaison + un texte de plusieurs lignes** (écrit par Claude, avec aussi des mots pas encore vus).
+- Chaque mot du texte est annoté `#n` (la règle qui fixe sa voyelle finale). Les terminaisons des règles vues disparaissent. Les mots déjà appris en fusha perdent leurs voyelles internes. La chadda reste tant que le mot n'est pas connu.
+- Toucher un mot affiche sa forme complète et la règle de sa terminaison. Pas d'exercice pour l'instant.
+
+- [x] Leçons 1 à 3 : après une préposition (-i/-in), complément du nom (-i/-in, et après مَعَ, بَعْدَ, قَبْلَ…), sujet et attribut (-u/-un)
+- [ ] Leçons suivantes : le complément (-a/-an), le verbe au présent (-u) ; les textes 1 à 3 sont déjà annotés pour ces règles
+- [ ] Démo : je lis les 3 textes sur le téléphone
+
 ## Rétros
 
 ### Sprint 1 — 2026-11-03
