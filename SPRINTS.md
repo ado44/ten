@@ -165,6 +165,7 @@ But : prendre l'habitude de lire, puis lire sans voyelles. Les voyelles disparai
 - [ ] Leçon 5 (le verbe au présent, -u) : prochaine ville à choisir (Le Caire, La Mecque, Médine, Istanbul, Beyrouth…)
 - [ ] Leçons suivantes : le complément (-a/-an), le verbe au présent (-u) ; les textes 1 à 3 sont déjà annotés pour ces règles
 - [ ] Démo : je lis les 3 textes sur le téléphone
+- À retenir : si GitHub Pages ne se met pas à jour après un push (aucun « pages build and deployment » pour le commit), le relancer avec un commit vide sur `main`.
 
 ## Rétros
 
